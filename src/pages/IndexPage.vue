@@ -1,42 +1,33 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+    <div class="column q-gutter-y-md">
+      <q-btn label="Request Permission" @click="requestNotificationPermission"/>
+      <q-btn label="Tell SW" @click="broadcastMessage"/>
+    </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
-import { ref } from 'vue';
 
-const todos = ref<Todo[]>([
-  {
-    id: 1,
-    content: 'ct1'
-  },
-  {
-    id: 2,
-    content: 'ct2'
-  },
-  {
-    id: 3,
-    content: 'ct3'
-  },
-  {
-    id: 4,
-    content: 'ct4'
-  },
-  {
-    id: 5,
-    content: 'ct5'
+import {inject} from 'vue';
+import {MessageType} from 'boot/broadcast';
+
+const broadcast : BroadcastChannel | undefined = inject('broadcast');
+const requestNotificationPermission = async () => {
+  const permission = await window.Notification.requestPermission();
+  // value of permission can be 'granted', 'default', 'denied'
+  // granted: user has accepted the request
+  // default: user has dismissed the notification permission popup by clicking on x
+  // denied: user has denied the request.
+  if (permission !== 'granted') {
+    throw new Error('Permission not granted for Notification');
   }
-]);
-const meta = ref<Meta>({
-  totalCount: 1200
-});
+};
+const broadcastMessage = () => {
+  console.log('Try broadcast message to SW');
+  broadcast?.postMessage({
+    type: MessageType.SUBSCRIBE,
+    payload: 'Hello from IndexPage'
+  });
+};
 </script>

@@ -6,13 +6,32 @@
 
 declare const self: ServiceWorkerGlobalScope & typeof globalThis;
 
-import { precacheAndRoute } from 'workbox-precaching';
+import {precacheAndRoute} from 'workbox-precaching';
+
+import {broadcast, MessageType} from 'boot/broadcast';
+
+broadcast.onmessage = (event) => {
+  if (event.data) {
+    switch (event.data.type) {
+      case MessageType.SUBSCRIBE:
+        console.log(event.data);
+        break;
+    }
+  }
+};
 
 // Use with precache injection
 precacheAndRoute(self.__WB_MANIFEST);
 
 const pubKey =
   'BGzzMG2Z2ASNOXFg8S019mQNeSWD-V3dDY2BVTDTCUuZ300uyWBQCMMWTOLFPJibQqaLSBlv6f4lz3rVi8YFu30';
+
+
+// self.addEventListener('message', (event) => {
+//   if (event.data.type === 'GET_VERSION') {
+//     event.ports[0].postMessage(SW_VERSION);
+//   }
+// });
 
 self.registration.pushManager
   .getSubscription()

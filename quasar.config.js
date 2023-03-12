@@ -8,7 +8,7 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-const { configure } = require('quasar/wrappers');
+const {configure} = require('quasar/wrappers');
 const path = require('path');
 
 module.exports = configure(function (/* ctx */) {
@@ -28,7 +28,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['i18n', 'axios'],
+    boot: ['axios', 'broadcast', 'i18n',],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -97,7 +97,7 @@ module.exports = configure(function (/* ctx */) {
         key: 'C:/cert/localhost_key.pem',
         cert: 'C:/cert/localhost.pem',
       },
-      open: true, // opens browser window automatically
+      open: false, // opens browser window automatically
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
