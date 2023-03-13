@@ -1,6 +1,6 @@
 # Aerodyne (aerodyne)
 
-A Quasar Project
+A Quasar Powered Real-time Messaging App
 
 ## Install the dependencies
 ```bash
@@ -11,7 +11,7 @@ npm install
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 ```bash
-quasar dev
+quasar dev -m pwa
 ```
 
 
@@ -34,7 +34,7 @@ npm run format
 
 ### Build the app for production
 ```bash
-quasar build
+quasar build -m pwa
 ```
 
 ### Customize the configuration

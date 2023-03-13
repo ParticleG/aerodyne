@@ -6,9 +6,9 @@
 
 declare const self: ServiceWorkerGlobalScope & typeof globalThis;
 
-import {precacheAndRoute} from 'workbox-precaching';
+import { precacheAndRoute } from 'workbox-precaching';
 
-import {broadcast, MessageType} from 'boot/broadcast';
+import { broadcast, MessageType } from 'boot/broadcast';
 
 broadcast.onmessage = (event) => {
   if (event.data) {
@@ -25,7 +25,6 @@ precacheAndRoute(self.__WB_MANIFEST);
 
 const pubKey =
   'BGzzMG2Z2ASNOXFg8S019mQNeSWD-V3dDY2BVTDTCUuZ300uyWBQCMMWTOLFPJibQqaLSBlv6f4lz3rVi8YFu30';
-
 
 // self.addEventListener('message', (event) => {
 //   if (event.data.type === 'GET_VERSION') {
@@ -66,10 +65,12 @@ self.registration.pushManager
 
 self.addEventListener('push', function (event) {
   console.log('On push event');
-  console.log(event);
-  event.waitUntil(
-    self.registration.showNotification('TEST', {
-      body: event.data ? event.data.text() : 'no payload',
-    })
-  );
+  if (event.data) {
+    console.log(event.data.text());
+    event.waitUntil(
+      self.registration.showNotification('TEST', {
+        body: event.data ? event.data.text() : 'no payload',
+      })
+    );
+  }
 });

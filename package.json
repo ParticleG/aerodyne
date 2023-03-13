@@ -1,7 +1,7 @@
 {
   "name": "aerodyne",
   "version": "0.0.1",
-  "description": "A Quasar Project",
+  "description": "A Quasar Powered Real-time Messaging App",
   "productName": "Aerodyne",
   "author": "ParticleG <particle_g@outlook.com>",
   "private": true,
