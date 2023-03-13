@@ -2,7 +2,7 @@
   <q-page class="row items-center justify-evenly">
     <div class="column q-gutter-y-md">
       <q-btn label="Request Permission" @click="requestNotificationPermission"/>
-      <q-btn label="Tell SW" @click="broadcastMessage"/>
+      <q-btn label="Subscribe" @click="Subscribe"/>
     </div>
   </q-page>
 </template>
@@ -23,11 +23,9 @@ const requestNotificationPermission = async () => {
     throw new Error('Permission not granted for Notification');
   }
 };
-const broadcastMessage = () => {
-  console.log('Try broadcast message to SW');
+const Subscribe = () => {
   broadcast?.postMessage({
-    type: MessageType.SUBSCRIBE,
-    payload: 'Hello from IndexPage'
+    type: MessageType.SUBSCRIBE
   });
 };
 </script>

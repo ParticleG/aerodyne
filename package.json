@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "@vespaiach/axios-fetch-adapter": "^0.3.1",
     "axios": "^1.2.1",
     "pinia": "^2.0.11",
     "quasar": "^2.6.0",
