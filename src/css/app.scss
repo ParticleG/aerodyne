@@ -1,1 +1,40 @@
 // app global css in SCSS form
+@import 'quasar/src/css/variables';
+
+@mixin custom-scrollbar($border-color) {
+  overflow: auto !important;
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    height: 0;
+    width: 16px;
+
+    &-button {
+      display: none;
+    }
+
+    &-thumb {
+      background-color: $grey-6;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(4, 0, 29, 0.25);
+      right: 4px;
+      width: 8px;
+      border: 4px solid $border-color;
+
+      &:hover {
+        background-color: $grey-3;
+      }
+    }
+
+    &-track {
+      background-color: transparent;
+    }
+  }
+}
+
+.scrollbar-dark {
+  @include custom-scrollbar($dark);
+}
+
+.scrollbar-dark-page {
+  @include custom-scrollbar($dark-page);
+}

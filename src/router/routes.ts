@@ -1,10 +1,22 @@
 import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
+  { path: '', redirect: 'chat' },
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    children: [
+      {
+        name: 'chat',
+        path: 'chat',
+        components: {
+          default: () => import('pages/ChatPage.vue'),
+          drawer: () => import('layouts/drawers/SessionDrawer.vue'),
+          footer: () => import('layouts/footers/ChatFooter.vue'),
+          header: () => import('layouts/headers/ChatHeader.vue'),
+        },
+      },
+    ],
   },
 
   // Always leave this as last one,
