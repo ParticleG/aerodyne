@@ -1,5 +1,5 @@
 <template>
-  <q-page ref="scrollTarget" class="row justify-center">
+  <q-page ref="scrollTarget" class="column justify-center">
     <!--    <div-->
     <!--      class="absolute-full"-->
     <!--      style="-->
@@ -13,19 +13,28 @@
     <!--        mask-image: url('chatPatterns/pattern-5.svg');-->
     <!--      "-->
     <!--    />-->
-    <div class="column col-12 col-lg-10 col-xl-8">
-      <q-chat-message
-        v-for="(message, index) in messages"
-        :key="index"
-        :avatar="message.avatar"
-        :bg-color="message.bgColor"
-        :name="message.name"
-        :sent="$q.screen.lt.md ? false : message.sent"
-        :stamp="message.stamp"
-        :text="message.text"
-        :text-color="message.textColor"
-      />
-    </div>
+    <q-virtual-scroll
+      class="scrollbar-dark-page"
+      :items="messages"
+      separator
+      v-slot="{ item, index }"
+      style="height: calc(100vh - 122px)"
+    >
+      <div class="row justify-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+          <q-chat-message
+            :key="index"
+            :avatar="item.avatar"
+            :bg-color="item.bgColor"
+            :name="item.name"
+            :sent="$q.screen.lt.md ? false : item.sent"
+            :stamp="item.stamp"
+            :text="item.text"
+            :text-color="item.textColor"
+          />
+        </div>
+      </div>
+    </q-virtual-scroll>
     <q-page-sticky
       :offset="[38, 30]"
       position="bottom-right"
@@ -65,7 +74,7 @@ import { ChatMessage } from 'src/utils/types';
 const scrollTarget = ref(null);
 
 const messages = ref(new Array<ChatMessage>());
-for (let index = 0; index < 100; index++) {
+for (let index = 0; index < 10000; index++) {
   const name = PSEUDO_NAMES[Math.floor(Math.random() * PSEUDO_NAMES.length)];
   const text = [];
   for (let i = 0; i < Math.ceil(Math.random() * 5); i++) {

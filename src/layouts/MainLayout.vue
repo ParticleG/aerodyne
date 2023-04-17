@@ -13,9 +13,7 @@
     />
     <q-page-container>
       <router-view
-        class="scrollbar-dark-page"
         :class="$q.platform.is.mobile ? 'q-px-md' : 'q-pl-md'"
-        style="height: calc(100vh - 122px)"
         @toggle:drawer="toggleLeftDrawer"
       />
     </q-page-container>
