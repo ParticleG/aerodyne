@@ -13,7 +13,6 @@
     />
     <q-page-container>
       <router-view
-        :class="$q.platform.is.mobile ? 'q-px-md' : 'q-pl-md'"
         @toggle:drawer="toggleLeftDrawer"
       />
     </q-page-container>

@@ -1,19 +1,24 @@
 <template>
   <q-drawer
-    class="bg-dark non-selectable"
+    class="non-selectable"
     behavior="desktop"
     :bordered="$q.screen.gt.sm"
     no-swipe-close
     no-swipe-open
     persistent
     :width="mobile ? $q.screen.width : width"
-    @mouseenter="showFab = true"
-    @mouseleave="showFab = false"
   >
     <div class="row no-wrap">
       <div class="column col-auto">
         <q-btn flat icon="menu" padding="md" />
-        <q-btn flat icon="add" padding="md" @click="manageAccount"/>
+        <q-btn flat icon="add" padding="md" @click="manageAccount" />
+        <q-space/>
+        <q-btn
+          flat
+          :icon="darkMode ? 'light_mode' : 'dark_mode'"
+          padding="md"
+          @click="toggleDarkMode"
+        />
       </div>
       <div style="flex: 1 1 auto; min-width: 0">
         <q-toolbar class="q-pa-sm q-pt-xs">
@@ -24,9 +29,11 @@
           </q-input>
         </q-toolbar>
         <q-list
-          class="scrollbar-dark"
+          class="scrollbar-container"
           :class="$q.platform.is.mobile ? 'q-px-md' : 'q-pl-md'"
           style="height: calc(100vh - 58px)"
+          @mouseenter="showFab = true"
+          @mouseleave="showFab = false"
         >
           <q-item
             v-for="index in 100"
@@ -75,11 +82,14 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 
 import AccountDialog from 'components/AccountDialog.vue';
 import DrawerResizer from 'components/DrawerResizer.vue';
+
+import { useSettingsStore } from 'stores/settings';
 
 export interface Props {
   mobile?: boolean;
@@ -89,7 +99,9 @@ withDefaults(defineProps<Props>(), {
   mobile: false,
 });
 
-const { dialog, screen } = useQuasar();
+const { darkMode } = storeToRefs(useSettingsStore());
+
+const { dark, dialog, screen } = useQuasar();
 
 const width = ref(400);
 const showFab = ref(false);
@@ -109,6 +121,11 @@ const manageAccount = () => {
     component: AccountDialog,
     componentProps: {},
   });
+};
+
+const toggleDarkMode = () => {
+  darkMode.value = !darkMode.value;
+  dark.set(darkMode.value);
 };
 </script>
 <style scoped lang="scss">

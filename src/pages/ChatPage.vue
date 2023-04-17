@@ -1,5 +1,5 @@
 <template>
-  <q-page ref="scrollTarget" class="column justify-center">
+  <q-page class="column justify-center">
     <!--    <div-->
     <!--      class="absolute-full"-->
     <!--      style="-->
@@ -14,11 +14,18 @@
     <!--      "-->
     <!--    />-->
     <q-virtual-scroll
-      class="scrollbar-dark-page"
+      ref="virtualScroll"
+      class="scrollbar-page"
+      :class="$q.platform.is.mobile ? 'q-px-md' : 'q-pl-md'"
       :items="messages"
       separator
+      virtual-scroll-item-size="80"
+      virtual-scroll-slice-ratio-after="1"
+      virtual-scroll-slice-ratio-before="2"
+      virtual-scroll-slice-size="50"
       v-slot="{ item, index }"
       style="height: calc(100vh - 122px)"
+      @virtual-scroll="onVirtualScroll"
     >
       <div class="row justify-center">
         <div class="col-12 col-lg-10 col-xl-8">
@@ -47,7 +54,8 @@
       >
         <q-btn
           v-show="inMiddle"
-          :color="onFab ? 'accent' : 'dark'"
+          class="color-auto"
+          :color="onFab ? 'accent' : undefined"
           fab
           icon="arrow_downward"
           @click="scrollToBottom"
@@ -58,23 +66,20 @@
         </q-btn>
       </transition>
     </q-page-sticky>
-    <q-scroll-observer
-      :scroll-target="$refs.scrollTarget as Element"
-      @scroll="onScroll"
-    />
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ComponentPublicInstance, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { PSEUDO_MESSAGES, PSEUDO_NAMES } from 'src/utils/constants';
 import { ChatMessage } from 'src/utils/types';
+import { QVirtualScroll } from 'quasar';
 
-const scrollTarget = ref(null);
+const virtualScroll = ref(null);
 
 const messages = ref(new Array<ChatMessage>());
-for (let index = 0; index < 10000; index++) {
+for (let index = 0; index < 100; index++) {
   const name = PSEUDO_NAMES[Math.floor(Math.random() * PSEUDO_NAMES.length)];
   const text = [];
   for (let i = 0; i < Math.ceil(Math.random() * 5); i++) {
@@ -99,26 +104,17 @@ for (let index = 0; index < 10000; index++) {
 const inMiddle = ref(false);
 const onFab = ref(false);
 
-function onScroll(event) {
-  const scrollElement = (scrollTarget.value as ComponentPublicInstance)?.$el;
-  inMiddle.value =
-    scrollElement.scrollHeight -
-      scrollElement.offsetHeight -
-      event.position.top >
-    53;
+function onVirtualScroll({ index }) {
+  inMiddle.value = index < messages.value.length - 1;
 }
 
 function scrollToBottom() {
-  const scrollElement = (scrollTarget.value as ComponentPublicInstance)?.$el;
-  scrollElement.scrollTo({
-    top: scrollElement.scrollHeight + scrollElement.offsetHeight,
-    behavior: 'smooth',
-  });
+  const { scrollTo } = virtualScroll.value as QVirtualScroll;
+  scrollTo(messages.value.length - 1);
 }
 
 onMounted(() => {
-  const scrollElement = (scrollTarget.value as ComponentPublicInstance)?.$el;
-  scrollElement.scrollTop = scrollElement.scrollHeight;
+  scrollToBottom();
 });
 </script>
 
