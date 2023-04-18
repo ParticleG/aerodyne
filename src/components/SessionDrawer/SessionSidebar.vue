@@ -1,7 +1,7 @@
 <template>
   <div class="column col-auto">
     <q-btn flat icon="menu" padding="md" />
-    <q-btn flat icon="add" padding="md" @click="manageAccount" />
+    <q-btn flat icon="add" padding="md" @click="subscribeAccount" />
     <q-space />
     <q-toggle
       :model-value="darkMode"
@@ -28,10 +28,12 @@ const { toggleDarkMode } = useSettingsStore();
 const { darkMode, darkModeColor } = storeToRefs(useSettingsStore());
 const { dialog } = useQuasar();
 
-const manageAccount = () => {
+const subscribeAccount = () => {
   dialog({
     component: AccountDialog,
-    componentProps: {},
+    componentProps: {
+      type: 'subscribe',
+    },
   });
 };
 </script>

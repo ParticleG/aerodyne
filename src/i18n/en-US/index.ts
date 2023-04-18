@@ -2,14 +2,27 @@ export default {
   components: {
     AccountDialog: {
       labels: {
-        title: 'Manage Accounts',
+        titles: {
+          account: 'Manage Account',
+          subscribe: 'Subscribe a new account',
+          login: 'Login to an account',
+        },
       },
-    },
-    AccountPanels: {
       AccountPanel: {
         labels: {
           title: 'Account List',
           noAccounts: 'No accounts found',
+          ok: 'OK',
+        },
+      },
+      SubscribePanel: {
+        errors: {
+          account: 'Invalid Account',
+        },
+        labels: {
+          account: 'Account',
+          cancel: 'Cancel',
+          subscribe: 'Subscribe',
         },
       },
     },
