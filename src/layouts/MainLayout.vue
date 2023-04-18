@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh LpR lFf" @resize="onResize">
+  <q-layout view="lHh LpR lFf">
     <router-view
       name="header"
       :mobile="screen.lt.md"
@@ -16,7 +16,7 @@
         class="scrollbar-page"
         :class="screen.lt.md ? 'q-px-md' : 'q-pl-md'"
         @toggle:drawer="toggleLeftDrawer"
-        :style="{ height: `${pageHeight}px` }"
+        :style="{ height: `${$q.screen.height - 122}px` }"
       />
     </q-page-container>
     <router-view name="footer" @toggle:drawer="toggleLeftDrawer" />
@@ -30,11 +30,6 @@ import { ref } from 'vue';
 const { screen } = useQuasar();
 const leftDrawerOpen = ref(true);
 
-const pageHeight = ref(0);
-
-const onResize = ({ height }) => {
-  pageHeight.value = height - 122;
-};
 const toggleLeftDrawer = (action?: boolean) => {
   leftDrawerOpen.value = action ?? !leftDrawerOpen.value;
 };
