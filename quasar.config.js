@@ -11,6 +11,7 @@
 const { configure } = require('quasar/wrappers');
 const path = require('path');
 
+// noinspection JSValidateTypes
 module.exports = configure(function (/* ctx */) {
   return {
     eslint: {
@@ -78,14 +79,8 @@ module.exports = configure(function (/* ctx */) {
         [
           '@intlify/vite-plugin-vue-i18n',
           {
-            // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
-            // compositionOnly: false,
-
-            // if you want to use named tokens in your Vue I18n messages, such as 'Hello {name}',
-            // you need to set `runtimeOnly: false`
+            compositionOnly: true,
             runtimeOnly: false,
-
-            // you need to set i18n resource including paths !
             include: path.resolve(__dirname, './src/i18n/**'),
           },
         ],
@@ -105,7 +100,7 @@ module.exports = configure(function (/* ctx */) {
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
 
-      // For special cases outside of where the auto-import strategy can have an impact
+      // For special cases outside where the auto-import strategy can have an impact
       // (like functional components as one of the examples),
       // you can manually specify Quasar components/directives to be available everywhere:
       //
