@@ -39,7 +39,7 @@ class WsRequest {
 class WsResponse extends WsRequest {
   result: WsResult;
 
-  constructor(result: WsResult, action?: WsAction, data?: any) {
+  constructor(result: WsResult, action?: WsAction, data?: unknown) {
     super(action, data);
     this.result = result;
   }
@@ -55,12 +55,12 @@ class WsResponse extends WsRequest {
 
 interface ChatMessage {
   avatar: string;
-  bgColor: string;
+  bgColor?: string;
   name: string;
   sent: boolean;
   stamp: string;
   text: string[];
-  textColor: string;
+  textColor?: string;
 }
 
 interface TouchPanEvent {
