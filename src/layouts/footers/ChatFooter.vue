@@ -26,4 +26,18 @@ import { ref } from 'vue';
 const inputMessage = ref('');
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@import 'src/css/app';
+
+body.body--dark {
+  .q-footer {
+    background-color: $dark-page;
+  }
+}
+
+body.body--light {
+  .q-footer {
+    background-color: $light-page;
+  }
+}
+</style>

@@ -13,7 +13,7 @@
             <q-card-section>
               <div class="row items-center q-gutter-sm">
                 <q-spinner-bars size="md" />
-                <div>{{ i18n("labels.loading")}}</div>
+                <div>{{ i18n('labels.loading') }}</div>
               </div>
             </q-card-section>
           </q-card>
@@ -112,9 +112,17 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+@import 'src/css/app';
+
+body.body--light {
+  .q-page {
+    background-color: $light-page;
+  }
+}
+
 .chat-emoji {
-  vertical-align: middle;
   height: 2em;
+  vertical-align: middle;
   width: 2em;
 }
 </style>

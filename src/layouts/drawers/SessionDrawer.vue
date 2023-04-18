@@ -90,4 +90,4 @@ const selectSession = (index: number) => {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style lang="scss"></style>

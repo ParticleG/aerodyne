@@ -6,7 +6,7 @@
         :key="index"
         :avatar="message.avatar"
         :bg-color="
-          message.name === 'Me' ? 'primary' : dark.isActive ? 'dark' : 'grey-4'
+          message.name === 'Me' ? 'primary' : dark.isActive ? 'dark' : 'grey-3'
         "
         :name="message.name"
         :sent="$q.screen.lt.md ? false : message.sent"

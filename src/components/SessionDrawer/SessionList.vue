@@ -14,7 +14,7 @@
       class="rounded-borders"
       :class="mini ? 'q-pa-sm' : undefined"
       :active="selected === index"
-      active-class="active-session-item"
+      active-class="active-session-item text-white"
       clickable
       v-ripple
       @click="selected = index"
@@ -102,10 +102,13 @@ for (let i = 0; i < 100; i++) {
 </script>
 
 <style scoped lang="scss">
-@import 'src/css/quasar.variables';
+@import 'src/css/app';
 
 .active-session-item {
-  color: white;
   background: $accent;
+
+  .q-item__label--caption {
+    color: $grey-3;
+  }
 }
 </style>

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
-import { Dark } from 'quasar';
+import { AddressbarColor, colors, Dark } from 'quasar';
 
+const { getPaletteColor } = colors;
 const darkModes = [false, 'auto', true] as const;
 export const useSettingsStore = defineStore('settings', {
   state: () => ({
@@ -23,6 +24,9 @@ export const useSettingsStore = defineStore('settings', {
   actions: {
     applyDarkMode() {
       Dark.set(this.darkMode);
+      AddressbarColor.set(
+        Dark.isActive ? getPaletteColor('grey-10') : getPaletteColor('grey-2')
+      );
     },
     toggleDarkMode() {
       const index = darkModes.indexOf(this.darkMode);

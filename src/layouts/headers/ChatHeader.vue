@@ -46,4 +46,18 @@ const openDrawer = () => {
 const { darkMode } = storeToRefs(useSettingsStore());
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+@import 'src/css/app';
+
+body.body--dark {
+  .q-header {
+    background-color: $dark;
+  }
+}
+
+body.body--light {
+  .q-header {
+    background-color: $light;
+  }
+}
+</style>

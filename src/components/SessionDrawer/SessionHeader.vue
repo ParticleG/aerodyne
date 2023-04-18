@@ -28,7 +28,8 @@
         anchor="bottom start"
         cover
         :offset="[0, 10]"
-        style="box-shadow: none; border-radius: 9999px"
+        max-width="70vw"
+        style="box-shadow: none; border-radius: 9999px; width: 300px"
       >
         <q-input
           ref="searchInput"
@@ -73,4 +74,13 @@ const onEnter = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+@import 'src/css/app';
+
+body.body--light {
+  .q-field,
+  .q-menu {
+    background-color: $light;
+  }
+}
+</style>
