@@ -1,117 +1,134 @@
 <template>
-  <q-page class="column justify-center">
-    <!--    <div-->
-    <!--      class="absolute-full"-->
-    <!--      style="-->
-    <!--        background: linear-gradient(-->
-    <!--          to right bottom,-->
-    <!--          #594d88 10%,-->
-    <!--          #342e46 50%,-->
-    <!--          #24687f 90%-->
-    <!--        );-->
-    <!--        -webkit-mask-image: url('chatPatterns/pattern-5.svg');-->
-    <!--        mask-image: url('chatPatterns/pattern-5.svg');-->
-    <!--      "-->
-    <!--    />-->
-    <q-virtual-scroll
-      ref="virtualScroll"
-      class="scrollbar-page"
-      :class="$q.platform.is.mobile ? 'q-px-md' : 'q-pl-md'"
-      :items="messages"
-      separator
-      virtual-scroll-item-size="80"
-      virtual-scroll-slice-ratio-after="1"
-      virtual-scroll-slice-ratio-before="2"
-      virtual-scroll-slice-size="50"
-      v-slot="{ item, index }"
-      style="height: calc(100vh - 122px)"
-      @virtual-scroll="onVirtualScroll"
+  <q-page ref="scrollTarget" class="flex flex-center">
+    <q-infinite-scroll
+      class="full-width"
+      :scroll-target="scrollTarget as Element"
+      reverse
+      @load="onLoad"
     >
       <div class="row justify-center">
         <div class="col-12 col-lg-10 col-xl-8">
           <q-chat-message
+            v-for="(message, index) in messages"
             :key="index"
-            :avatar="item.avatar"
-            :bg-color="item.bgColor"
-            :name="item.name"
-            :sent="$q.screen.lt.md ? false : item.sent"
-            :stamp="item.stamp"
-            :text="item.text"
-            :text-color="item.textColor"
+            :avatar="message.avatar"
+            :bg-color="
+              message.name === 'Me'
+                ? 'primary'
+                : dark.isActive
+                ? 'dark'
+                : 'grey-4'
+            "
+            :name="message.name"
+            :sent="$q.screen.lt.md ? false : message.sent"
+            :stamp="message.stamp"
+            :text="message.text"
+            :text-color="
+              message.name === 'Me'
+                ? 'white'
+                : dark.isActive
+                ? 'white'
+                : 'black'
+            "
           />
         </div>
       </div>
-    </q-virtual-scroll>
-    <q-page-sticky
-      :offset="[38, 30]"
-      position="bottom-right"
-      :scroll-offset="20"
-    >
-      <transition
-        enter-active-class="animated bounceInUp"
-        leave-active-class="animated bounceOutDown"
-        style="--animate-duration: 0.75s"
-      >
-        <q-btn
-          v-show="inMiddle"
-          class="color-auto"
-          :color="onFab ? 'accent' : undefined"
-          fab
-          icon="arrow_downward"
-          @click="scrollToBottom"
-          @mouseenter="onFab = true"
-          @mouseleave="onFab = false"
-        >
-          <q-badge color="accent" floating rounded>114514</q-badge>
-        </q-btn>
-      </transition>
-    </q-page-sticky>
+      <template v-slot:loading>
+        <q-page-sticky class="z-top" :offset="[38, 30]" position="top-right">
+          <q-card flat bordered>
+            <q-card-section>
+              <div class="row items-center q-gutter-sm">
+                <q-spinner-bars size="md" />
+                <div>loading messages...</div>
+              </div>
+            </q-card-section>
+          </q-card>
+        </q-page-sticky>
+      </template>
+    </q-infinite-scroll>
+    <PageScroller v-model="inMiddle" @click="scrollToBottom" />
+    <q-scroll-observer
+      :scroll-target="$refs.scrollTarget as Element"
+      @scroll="onScroll"
+    />
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { useQuasar } from 'quasar';
+import { ComponentPublicInstance, onMounted, ref } from 'vue';
+
+import PageScroller from 'components/PageScroller.vue';
 
 import { PSEUDO_MESSAGES, PSEUDO_NAMES } from 'src/utils/constants';
+import { sleep } from 'src/utils/tools';
 import { ChatMessage } from 'src/utils/types';
-import { QVirtualScroll } from 'quasar';
 
-const virtualScroll = ref(null);
+const { dark } = useQuasar();
+
+const scrollTarget = ref(null);
 
 const messages = ref(new Array<ChatMessage>());
-for (let index = 0; index < 100; index++) {
-  const name = PSEUDO_NAMES[Math.floor(Math.random() * PSEUDO_NAMES.length)];
-  const text = [];
-  for (let i = 0; i < Math.ceil(Math.random() * 5); i++) {
-    text.push(
-      PSEUDO_MESSAGES[Math.floor(Math.random() * PSEUDO_MESSAGES.length)]
-    );
-  }
-  const message = {
-    avatar: `https://cdn.quasar.dev/img/avatar${Math.ceil(
-      Math.random() * PSEUDO_NAMES.length
-    )}.jpg`,
-    bgColor: name === 'Me' ? 'primary' : 'dark',
-    name: name,
-    sent: name === 'Me',
-    stamp: 'Just now',
-    text: text,
-    textColor: 'white',
-  };
-  messages.value.push(message);
-}
 
+const loading = ref(false);
 const inMiddle = ref(false);
-const onFab = ref(false);
 
-function onVirtualScroll({ index }) {
-  inMiddle.value = index < messages.value.length - 1;
+const getMessage = async () => {
+  let newMessages = new Array<ChatMessage>();
+  for (let index = 0; index < Math.ceil(20 + Math.random() * 20); index++) {
+    const name = PSEUDO_NAMES[Math.floor(Math.random() * PSEUDO_NAMES.length)];
+    const text = [];
+    for (let i = 0; i < Math.ceil(Math.random() * 5); i++) {
+      text.push(
+        PSEUDO_MESSAGES[Math.floor(Math.random() * PSEUDO_MESSAGES.length)]
+      );
+    }
+    const message = {
+      avatar: `https://cdn.quasar.dev/img/avatar${Math.ceil(
+        Math.random() * PSEUDO_NAMES.length
+      )}.jpg`,
+      name: name,
+      sent: name === 'Me',
+      stamp: 'Just now',
+      text: text,
+    };
+    newMessages.push(message);
+  }
+  await sleep(Math.ceil(Math.random() * 2000));
+  messages.value.splice(0, 0, ...newMessages);
+  return newMessages.length;
+};
+
+function onScroll() {
+  const scrollElement = (scrollTarget.value as ComponentPublicInstance)?.$el;
+  inMiddle.value =
+    scrollElement.scrollHeight -
+      scrollElement.offsetHeight -
+      scrollElement.scrollTop >
+    53;
 }
 
-function scrollToBottom() {
-  const { scrollTo } = virtualScroll.value as QVirtualScroll;
-  scrollTo(messages.value.length - 1);
-}
+const scrollToBottom = () => {
+  const scrollElement = (scrollTarget.value as ComponentPublicInstance)?.$el;
+  scrollElement.scrollTo({
+    top: scrollElement.scrollHeight + scrollElement.offsetHeight,
+    behavior: 'smooth',
+  });
+};
+
+const onLoad = async (_, done) => {
+  loading.value = true;
+  let needScroll = false;
+  if (messages.value.length === 0) {
+    needScroll = true;
+  }
+  await getMessage();
+  done();
+  loading.value = false;
+  if (needScroll) {
+    setTimeout(() => scrollToBottom());
+  }
+};
 
 onMounted(() => {
   scrollToBottom();

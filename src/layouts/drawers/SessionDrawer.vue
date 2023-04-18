@@ -9,17 +9,8 @@
     :width="mobile ? $q.screen.width : width"
   >
     <div class="row no-wrap">
-      <div class="column col-auto">
-        <q-btn flat icon="menu" padding="md" />
-        <q-btn flat icon="add" padding="md" @click="manageAccount" />
-        <q-space/>
-        <q-btn
-          flat
-          :icon="darkMode ? 'light_mode' : 'dark_mode'"
-          padding="md"
-          @click="toggleDarkMode"
-        />
-      </div>
+      <SessionSidebar />
+      <q-separator vertical/>
       <div style="flex: 1 1 auto; min-width: 0">
         <q-toolbar class="q-pa-sm q-pt-xs">
           <q-input class="col-grow" clearable dense outlined rounded>
@@ -82,14 +73,11 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
 import { ref } from 'vue';
 
-import AccountDialog from 'components/AccountDialog.vue';
 import DrawerResizer from 'components/DrawerResizer.vue';
-
-import { useSettingsStore } from 'stores/settings';
+import SessionSidebar from 'components/SessionSidebar.vue';
 
 export interface Props {
   mobile?: boolean;
@@ -99,9 +87,7 @@ withDefaults(defineProps<Props>(), {
   mobile: false,
 });
 
-const { darkMode } = storeToRefs(useSettingsStore());
-
-const { dark, dialog, screen } = useQuasar();
+const { screen } = useQuasar();
 
 const width = ref(400);
 const showFab = ref(false);
@@ -114,18 +100,6 @@ const selectSession = (id: number) => {
   if (screen.lt.md) {
     emit('toggle:drawer', false);
   }
-};
-
-const manageAccount = () => {
-  dialog({
-    component: AccountDialog,
-    componentProps: {},
-  });
-};
-
-const toggleDarkMode = () => {
-  darkMode.value = !darkMode.value;
-  dark.set(darkMode.value);
 };
 </script>
 <style scoped lang="scss">

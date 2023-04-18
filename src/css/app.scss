@@ -56,7 +56,11 @@ body.body--dark {
     }
   }
 
-  .q-btn, .color-auto {
+  .q-btn.color-auto {
+    background-color: $dark;
+  }
+
+  .q-field.color-auto {
     background-color: $dark;
   }
 
@@ -65,10 +69,6 @@ body.body--dark {
   }
 
   .q-header {
-    background-color: $dark;
-  }
-
-  .q-input, .color-auto {
     background-color: $dark;
   }
 
@@ -93,16 +93,16 @@ body.body--light {
     color: $grey-8;
   }
 
+  .q-field.color-auto {
+    background-color: $grey-3;
+  }
+
   .q-footer {
     background-color: $light;
   }
 
   .q-header {
     background-color: $light;
-  }
-
-  .q-field.color-auto {
-    background-color: $grey-3;
   }
 
   .text-auto {

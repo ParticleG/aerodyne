@@ -19,7 +19,7 @@ class WsWrapper {
         Notify.create({
           type: 'warning',
           message: `Unknown action(${message.action}): ${message}`,
-          icon: 'mdi-message-question',
+          icon: 'help_outline',
         });
       }
     };
