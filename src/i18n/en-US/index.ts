@@ -14,4 +14,11 @@ export default {
       },
     },
   },
+  pages: {
+    ChatPage: {
+      labels: {
+        loading: 'Loading messages...',
+      },
+    },
+  },
 };

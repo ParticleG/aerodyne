@@ -9,6 +9,7 @@ import { Router } from 'vue-router';
  * @see https://pinia.vuejs.org/core-concepts/plugins.html#typing-new-store-properties
  */
 declare module 'pinia' {
+  // noinspection JSUnusedGlobalSymbols
   export interface PiniaCustomProperties {
     readonly router: Router;
   }
@@ -23,6 +24,7 @@ declare module 'pinia' {
  * with the Store instance.
  */
 
+// noinspection JSUnusedGlobalSymbols
 export default store((/* { ssrContext } */) => {
   const pinia = createPinia();
   pinia.use(persistedState);

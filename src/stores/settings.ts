@@ -17,7 +17,7 @@ export const useSettingsStore = defineStore('settings', {
         default:
           return 'grey-8';
       }
-    }
+    },
   },
 
   actions: {

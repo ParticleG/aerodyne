@@ -14,6 +14,7 @@
     <q-page-container>
       <router-view
         class="scrollbar-page"
+        :class="screen.lt.md ? 'q-px-md' : 'q-pl-md'"
         @toggle:drawer="toggleLeftDrawer"
         style="height: calc(100vh - 122px)"
       />

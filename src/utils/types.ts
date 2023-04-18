@@ -53,34 +53,6 @@ class WsResponse extends WsRequest {
   }
 }
 
-interface ChatMessage {
-  avatar: string;
-  bgColor?: string;
-  name: string;
-  sent: boolean;
-  stamp: string;
-  text: string[];
-  textColor?: string;
-}
-
-interface TouchPanEvent {
-  isFirst: boolean;
-  isFinal: boolean;
-  duration: number;
-  distance: {
-    x: number;
-    y: number;
-  };
-  offset: {
-    x: number;
-    y: number;
-  };
-  delta: {
-    x: number;
-    y: number;
-  };
-}
-
-export type { OicqAccount, UserId, UUID, ChatMessage,TouchPanEvent };
+export type { OicqAccount, UserId, UUID };
 
 export { WsAction, ClientState, WsRequest, WsResponse };

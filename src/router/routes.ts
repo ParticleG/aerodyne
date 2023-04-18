@@ -1,5 +1,6 @@
 import { RouteRecordRaw } from 'vue-router';
 
+// noinspection JSUnusedGlobalSymbols
 const routes: RouteRecordRaw[] = [
   { path: '', redirect: 'chat' },
   {

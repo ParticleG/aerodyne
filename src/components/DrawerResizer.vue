@@ -14,20 +14,18 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { TouchPanEvent } from 'src/utils/types';
+import { TouchPanEvent } from 'components/models';
 
 export interface Props {
-  modelValue: number;
-  maxWidth?: number;
-  minWidth?: number;
+  maxWidth: number;
+  minWidth: number;
   size?: number;
+  snapWidth: number;
+  modelValue: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: 400,
-  maxWidth: 500,
-  minWidth: 300,
-  size: 5,
+  size: 3,
 });
 const emit = defineEmits(['update:modelValue', 'update:resizing']);
 
@@ -40,7 +38,7 @@ const oldWidth = ref(width.value);
 const resizing = ref(false);
 const resizerVisibility = ref(0);
 
-const result = ref(0);
+const thresholdWidth = (props.minWidth + props.snapWidth) / 2;
 
 const handleResize = (event: TouchPanEvent): void => {
   if (event.isFirst) {
@@ -59,15 +57,17 @@ const handleResize = (event: TouchPanEvent): void => {
     resizerVisibility.value = 0;
   }
   // Calculate the new width
-  result.value = oldWidth.value + event.offset.x;
-  result.value =
-    result.value < props.minWidth
-      ? props.minWidth
-      : result.value > props.maxWidth
-      ? props.maxWidth
-      : result.value;
+  const result = oldWidth.value + event.offset.x;
   // Update the width
-  width.value = result.value;
+  if (result < thresholdWidth) {
+    width.value = props.minWidth;
+  } else if (result < props.snapWidth) {
+    width.value = props.snapWidth;
+  } else if (result > props.maxWidth) {
+    width.value = props.maxWidth;
+  } else {
+    width.value = result;
+  }
 };
 </script>
 

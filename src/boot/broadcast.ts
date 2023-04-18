@@ -6,10 +6,9 @@ enum MessageType {
   SUBSCRIBE,
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default boot(({app}) => {
-  // for Options API
   app.config.globalProperties.$broadcast = broadcast;
-  // for Composition API
   app.provide('broadcast', broadcast)
 })
 

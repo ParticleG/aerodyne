@@ -1,4 +1,5 @@
 /* eslint-disable */
+// noinspection JSUnusedGlobalSymbols
 
 declare namespace NodeJS {
   interface ProcessEnv {

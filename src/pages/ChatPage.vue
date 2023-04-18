@@ -6,40 +6,14 @@
       reverse
       @load="onLoad"
     >
-      <div class="row justify-center">
-        <div class="col-12 col-lg-10 col-xl-8">
-          <q-chat-message
-            v-for="(message, index) in messages"
-            :key="index"
-            :avatar="message.avatar"
-            :bg-color="
-              message.name === 'Me'
-                ? 'primary'
-                : dark.isActive
-                ? 'dark'
-                : 'grey-4'
-            "
-            :name="message.name"
-            :sent="$q.screen.lt.md ? false : message.sent"
-            :stamp="message.stamp"
-            :text="message.text"
-            :text-color="
-              message.name === 'Me'
-                ? 'white'
-                : dark.isActive
-                ? 'white'
-                : 'black'
-            "
-          />
-        </div>
-      </div>
+      <ChatList v-model="messages" />
       <template v-slot:loading>
         <q-page-sticky class="z-top" :offset="[38, 30]" position="top-right">
           <q-card flat bordered>
             <q-card-section>
               <div class="row items-center q-gutter-sm">
                 <q-spinner-bars size="md" />
-                <div>loading messages...</div>
+                <div>{{ i18n("labels.loading")}}</div>
               </div>
             </q-card-section>
           </q-card>
@@ -55,21 +29,23 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
 import { ComponentPublicInstance, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+import { ChatMessage } from 'components/models';
+import ChatList from 'components/ChatPage/ChatList.vue';
 import PageScroller from 'components/PageScroller.vue';
 
 import { PSEUDO_MESSAGES, PSEUDO_NAMES } from 'src/utils/constants';
 import { sleep } from 'src/utils/tools';
-import { ChatMessage } from 'src/utils/types';
 
-const { dark } = useQuasar();
+const { t } = useI18n();
+const i18n = (relativePath) => {
+  return t('pages.ChatPage.' + relativePath);
+};
 
 const scrollTarget = ref(null);
-
 const messages = ref(new Array<ChatMessage>());
-
 const loading = ref(false);
 const inMiddle = ref(false);
 

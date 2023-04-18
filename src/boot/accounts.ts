@@ -60,8 +60,12 @@ class WsWrapper {
   }
 }
 
+const wsMap = new Map<string, WsWrapper>();
+
+// noinspection JSUnusedGlobalSymbols
 export default boot(({ app }) => {
-  app.config.globalProperties.$wss = new Map<string, WsWrapper>();
+  app.config.globalProperties.$wsMap = wsMap;
+  app.provide('wsMap', wsMap);
 });
 
-export { WsWrapper };
+export { WsWrapper, wsMap };

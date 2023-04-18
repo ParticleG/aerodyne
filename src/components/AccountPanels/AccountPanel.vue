@@ -1,11 +1,12 @@
 <template>
-  <div class="column q-gutter-y-lg" style="margin-bottom: 2.25rem">
-      <div
-        class="text-grey self-center"
-        style="font-style: italic; font-size: 1.5rem">
-        {{ i18n("labels.noAccounts") }}
-      </div>
-  </div>
+  <q-tab-panel class="column q-gutter-y-lg" style="margin-bottom: 2.25rem">
+    <div
+      class="text-grey self-center"
+      style="font-style: italic; font-size: 1.5rem"
+    >
+      {{ i18n('labels.noAccounts') }}
+    </div>
+  </q-tab-panel>
 </template>
 
 <script setup lang="ts">

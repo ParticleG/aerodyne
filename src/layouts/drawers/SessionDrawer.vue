@@ -10,54 +10,27 @@
   >
     <div class="row no-wrap">
       <SessionSidebar />
-      <q-separator vertical/>
+      <q-separator vertical />
       <div style="flex: 1 1 auto; min-width: 0">
-        <q-toolbar class="q-pa-sm q-pt-xs">
-          <q-input class="col-grow" clearable dense outlined rounded>
-            <template v-slot:prepend>
-              <q-icon color="grey" name="search" />
-            </template>
-          </q-input>
-        </q-toolbar>
-        <q-list
-          class="scrollbar-container"
-          :class="$q.platform.is.mobile ? 'q-px-md' : 'q-pl-md'"
-          style="height: calc(100vh - 58px)"
+        <SessionHeader
+          :mini="isMini"
+          v-model="searchText"
+          @keydown.enter="selectSession(0)"
+        />
+        <SessionList
+          :model-value="selectedSession"
+          :mini="isMini"
           @mouseenter="showFab = true"
           @mouseleave="showFab = false"
-        >
-          <q-item
-            v-for="index in 100"
-            :key="index"
-            class="rounded-borders"
-            :active="sessionId === index"
-            active-class="active-session-item"
-            clickable
-            v-ripple
-            @click="selectSession(index)"
-          >
-            <q-item-section avatar>
-              <q-avatar>
-                <q-img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-              </q-avatar>
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Session Item demo</q-item-label>
-              <q-item-label class="ellipsis" caption>
-                Tom: Have you seen Quasar???????????????????
-              </q-item-label>
-            </q-item-section>
-            <q-item-section class="q-gutter-y-sm" side>
-              <q-item-label caption>2 min ago</q-item-label>
-              <q-badge color="blue" label="114514" rounded />
-            </q-item-section>
-          </q-item>
-        </q-list>
+          @update:model-value="selectSession"
+        />
       </div>
     </div>
     <DrawerResizer
       class="absolute-right full-height"
-      :size="3"
+      :max-width="DRAWER_WIDTHS.max"
+      :min-width="DRAWER_WIDTHS.min"
+      :snap-width="DRAWER_WIDTHS.snap"
       v-model="width"
     />
     <q-page-sticky :offset="[38, 20]" position="bottom-right">
@@ -66,7 +39,12 @@
         leave-active-class="animated bounceOutDown"
         style="--animate-duration: 0.75s"
       >
-        <q-btn v-show="showFab" color="accent" fab icon="edit"></q-btn>
+        <q-btn
+          v-show="!mobile && !isMini && showFab"
+          color="accent"
+          fab
+          icon="edit"
+        ></q-btn>
       </transition>
     </q-page-sticky>
   </q-drawer>
@@ -74,39 +52,42 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import DrawerResizer from 'components/DrawerResizer.vue';
-import SessionSidebar from 'components/SessionSidebar.vue';
+import SessionHeader from 'components/SessionDrawer/SessionHeader.vue';
+import SessionList from 'components/SessionDrawer/SessionList.vue';
+import SessionSidebar from 'components/SessionDrawer/SessionSidebar.vue';
+
+import { DRAWER_WIDTHS } from 'src/utils/constants';
 
 export interface Props {
   mobile?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   mobile: false,
 });
 
-const { screen } = useQuasar();
-
-const width = ref(400);
-const showFab = ref(false);
-
-const sessionId = ref(-1);
 const emit = defineEmits(['toggle:drawer']);
 
-const selectSession = (id: number) => {
-  sessionId.value = id;
+const { screen } = useQuasar();
+
+const width = ref(500);
+const searchText = ref('');
+const selectedSession = ref(-1);
+const showFab = ref(false);
+
+const isMini = computed(
+  () => !props.mobile && width.value < DRAWER_WIDTHS.snap
+);
+
+const selectSession = (index: number) => {
+  selectedSession.value = index;
   if (screen.lt.md) {
     emit('toggle:drawer', false);
   }
 };
 </script>
-<style scoped lang="scss">
-@import 'src/css/quasar.variables';
 
-.active-session-item {
-  color: white;
-  background: $accent;
-}
-</style>
+<style scoped lang="scss"></style>

@@ -1,3 +1,10 @@
+const DRAWER_WIDTHS = {
+  initial: 500,
+  max: 700,
+  min: 128,
+  snap: 320,
+};
+
 const PSEUDO_MESSAGES = [
   "I don't know how to spell a lot of things.",
   "He only had one drink but he's completely wasted.",
@@ -42,13 +49,5 @@ const PSEUDO_MESSAGES = [
 ];
 
 const PSEUDO_NAMES = ['Me', 'Monica', 'Jane', 'Davy', 'Audrey', 'Judy'];
-const THUMB_STYLE = {
-  backgroundColor: '#a0a0a5',
-  borderRadius: '6px',
-  boxShadow: '0 0 8px rgba(4, 0, 29, 0.25)',
-  opacity: '0.75',
-  right: '4px',
-  width: '6px',
-  zIndex: '200',
-};
-export { PSEUDO_MESSAGES,PSEUDO_NAMES, THUMB_STYLE };
+
+export { DRAWER_WIDTHS, PSEUDO_MESSAGES, PSEUDO_NAMES };
