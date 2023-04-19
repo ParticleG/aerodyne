@@ -45,4 +45,7 @@ export const useUsersStore = defineStore('users', {
       return true;
     },
   },
+  persist: {
+    key: 'aerodyne.users',
+  },
 });

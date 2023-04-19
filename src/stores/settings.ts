@@ -46,7 +46,7 @@ export const useSettingsStore = defineStore('settings', {
     ): Promise<boolean> {
       try {
         $axios.create(`${ssl ? 'https' : 'http'}://${host}:${port}`);
-        $axios.api?.get('/');
+        await $axios.api?.get('/');
         this.endpoint.host = host;
         this.endpoint.port = port;
         return true;
@@ -56,5 +56,6 @@ export const useSettingsStore = defineStore('settings', {
       }
     },
   },
-  persist: true,
-});
+  persist: {
+    key: 'aerodyne.settings',
+  },});
