@@ -1,7 +1,7 @@
 import { Notify } from 'quasar';
 import { boot } from 'quasar/wrappers';
 
-import { WsAction } from 'src/utils/types';
+import { UserId, WsAction } from 'src/utils/types';
 import { ActionBase } from 'src/utils/actions';
 
 type WsHandler = (message: string) => void;
@@ -60,7 +60,7 @@ class WsWrapper {
   }
 }
 
-const wsMap = new Map<string, WsWrapper>();
+const wsMap = new Map<UserId, WsWrapper>();
 
 // noinspection JSUnusedGlobalSymbols
 export default boot(({ app }) => {

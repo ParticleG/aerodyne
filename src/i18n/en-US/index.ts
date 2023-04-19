@@ -1,17 +1,16 @@
 export default {
   components: {
-    AccountDialog: {
+    ClientDialog: {
       labels: {
         titles: {
           account: 'Manage Account',
-          subscribe: 'Subscribe a new account',
           login: 'Login to an account',
+          subscribe: 'Subscribe a new account',
         },
       },
-      AccountPanel: {
+      InfoPanel: {
         labels: {
-          title: 'Account List',
-          noAccounts: 'No accounts found',
+          title: 'Client Info',
           ok: 'OK',
         },
       },
@@ -25,6 +24,35 @@ export default {
           subscribe: 'Subscribe',
         },
       },
+    },
+    EndpointDialog: {
+      descriptions: {
+        multiple:
+          'Must be a valid EXTRANET host & port.\n' +
+          'SSL is forced enable for multiple users mode.',
+        single:
+          'Must be a valid INTRANET host & port\n' +
+          'SSL is required if not using localhost.',
+      },
+      errors: {
+        host: 'Invalid Host',
+        port: 'Invalid Port',
+      },
+      labels: {
+        backendMode: 'Backend Mode: ',
+        cancel: 'Cancel',
+        connect: 'Connect',
+        host: 'Host',
+        multiple: 'Multiple Users',
+        port: 'Port',
+        single: 'Single User',
+        title: 'Connect to an endpoint',
+        useSSL: 'Use SSL',
+      },
+      notifications:{
+        connectFailed: 'Connection failed',
+        connectSuccess: 'Connection success',
+      }
     },
   },
   pages: {

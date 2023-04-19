@@ -22,7 +22,7 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const i18n = (relativePath: string) => {
-  return t('components.AccountDialog.AccountPanel.' + relativePath);
+  return t('components.ClientDialog.InfoPanel.' + relativePath);
 };
 
 const emit = defineEmits(['click:cancel']);

@@ -5,6 +5,18 @@ const DRAWER_WIDTHS = {
   snap: 320,
 };
 
+const INTRANET_PATTERN = new RegExp(
+  '^((localhost)|(127\\.0\\.0\\.1)|' + // localhost
+    '(\\d|10)(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}|' + // Class A address
+    '(172\\.)(1[6-9]|2\\d|3[01])(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){2}|' + // Class B address
+    '(192\\.168)(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){2})$' // Class C address
+);
+
+const EXTRANET_PATTERN = new RegExp(
+  '^((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))$' // OR IPv4 address
+);
+
 const PSEUDO_MESSAGES = [
   "I don't know how to spell a lot of things.",
   "He only had one drink but he's completely wasted.",
@@ -50,4 +62,10 @@ const PSEUDO_MESSAGES = [
 
 const PSEUDO_NAMES = ['Me', 'Monica', 'Jane', 'Davy', 'Audrey', 'Judy'];
 
-export { DRAWER_WIDTHS, PSEUDO_MESSAGES, PSEUDO_NAMES };
+export {
+  DRAWER_WIDTHS,
+  INTRANET_PATTERN,
+  EXTRANET_PATTERN,
+  PSEUDO_MESSAGES,
+  PSEUDO_NAMES,
+};

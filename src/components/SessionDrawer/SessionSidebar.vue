@@ -21,7 +21,7 @@
 import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
 
-import AccountDialog from 'components/AccountDialog.vue';
+import ClientDialog from 'components/ClientDialog.vue';
 import { useSettingsStore } from 'stores/settings';
 
 const { toggleDarkMode } = useSettingsStore();
@@ -30,7 +30,7 @@ const { dialog } = useQuasar();
 
 const subscribeAccount = () => {
   dialog({
-    component: AccountDialog,
+    component: ClientDialog,
     componentProps: {
       type: 'subscribe',
     },

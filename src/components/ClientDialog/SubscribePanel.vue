@@ -12,7 +12,7 @@
       type="number"
     >
       <template v-slot:error>
-        <div class="text-font-inter" style="font-size: 0.5rem">
+        <div>
           {{ i18n('errors.account') }}
         </div>
       </template>
@@ -39,7 +39,7 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 const i18n = (relativePath: string) => {
-  return t('components.AccountDialog.SubscribePanel.' + relativePath);
+  return t('components.ClientDialog.SubscribePanel.' + relativePath);
 };
 
 const emit = defineEmits(['click:cancel', 'click:confirm']);
