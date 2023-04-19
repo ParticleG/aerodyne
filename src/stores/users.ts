@@ -12,30 +12,33 @@ type User = {
 
 type State = {
   users: Map<UserId, User>;
-  lastUser: User | null;
+  currentUserId: UserId;
 };
 
 export const useUsersStore = defineStore('users', {
   state: (): State => ({
     users: new Map<UserId, User>(),
-    lastUser: null,
+    currentUserId: 0,
   }),
-  getters: {},
+  getters: {
+    currentUser(): User | undefined {
+      return this.users.get(this.currentUserId);
+    },
+  },
   actions: {
     addUser(user: User): boolean {
       if (this.users.has(user.id)) {
         return false;
       }
       this.users.set(user.id, user);
-      this.lastUser = user;
+      this.currentUserId = user.id;
       return true;
     },
     switchUser(id: UserId): boolean {
-      const user = this.users.get(id);
-      if (!user) {
+      if (!this.users.has(id)) {
         return false;
       }
-      this.lastUser = user;
+      this.currentUserId = id;
       return true;
     },
   },
