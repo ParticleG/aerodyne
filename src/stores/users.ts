@@ -11,33 +11,27 @@ type User = {
 };
 
 type State = {
-  users: User[];
+  users: Map<UserId, User>;
   lastUser: User | null;
 };
 
 export const useUsersStore = defineStore('users', {
   state: (): State => ({
-    users: [],
+    users: new Map<UserId, User>(),
     lastUser: null,
   }),
-  getters: {
-    getUserById({ users }): (id: UserId) => User | undefined {
-      return (id: UserId): User | undefined => {
-        return users.find((user) => user.id === id);
-      };
-    },
-  },
+  getters: {},
   actions: {
     addUser(user: User): boolean {
-      if (this.users.find((u) => u.id === user.id)) {
+      if (this.users.has(user.id)) {
         return false;
       }
-      this.users.push(user);
+      this.users.set(user.id, user);
       this.lastUser = user;
       return true;
     },
     switchUser(id: UserId): boolean {
-      const user = this.getUserById(id);
+      const user = this.users.get(id);
       if (!user) {
         return false;
       }
