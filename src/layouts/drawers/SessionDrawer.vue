@@ -27,6 +27,7 @@
       </div>
     </div>
     <DrawerResizer
+      v-show="screen.gt.sm"
       class="absolute-right full-height"
       :max-width="DRAWER_WIDTHS.max"
       :min-width="DRAWER_WIDTHS.min"

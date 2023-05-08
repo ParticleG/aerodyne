@@ -2,12 +2,12 @@
   <q-tab-panel class="column q-gutter-y-lg">
     <q-input
       v-model="accountInput.content"
-      clearable
       :dense="!$q.screen.gt.sm"
       :error="accountInput.error"
       :label="i18n('labels.account')"
       :loading="accountInput.loading"
       :maxlength="12"
+      clearable
       outlined
       type="number"
     >
@@ -19,21 +19,21 @@
     </q-input>
     <div class="row q-gutter-x-md justify-end">
       <q-btn
-        flat
         :color="$q.dark.isActive ? 'white' : 'black'"
         :label="i18n('labels.cancel')"
+        flat
         @click="emit('click:cancel')"
       />
       <q-btn
-        color="primary"
         :label="i18n('labels.subscribe')"
-        @click="emit('click:confirm')"
+        color="primary"
+        @click="subscribeClient"
       />
     </div>
   </q-tab-panel>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -54,6 +54,14 @@ const accountInput = reactive({
   }),
   loading: false,
 });
+
+const subscribeClient = () => {
+  accountInput.loading = true;
+  setTimeout(() => {
+    accountInput.loading = false;
+    emit('click:confirm');
+  }, 1000);
+};
 </script>
 
 <style scoped></style>

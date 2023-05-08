@@ -2,7 +2,7 @@
   <router-view />
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
 
@@ -13,8 +13,8 @@ import { useUsersStore } from 'stores/users';
 
 const { dialog } = useQuasar();
 const { applyDarkMode } = useSettingsStore();
-const { endpoint } = storeToRefs(useSettingsStore());
-const { lastUser } = storeToRefs(useUsersStore());
+const { applyEndpoint } = useUsersStore();
+const { endpoint, lastUser } = storeToRefs(useUsersStore());
 
 applyDarkMode();
 
@@ -26,5 +26,7 @@ if (endpoint.value.host === '') {
       // TODO: implement this
     }
   });
+} else {
+  (async () => await applyEndpoint())();
 }
 </script>

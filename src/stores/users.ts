@@ -1,5 +1,7 @@
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { UserId } from 'src/utils/types';
+import { $axios } from 'boot/axios';
+import { wsMap, WsWrapper } from 'boot/accounts';
 
 type User = {
   id: UserId;
@@ -10,15 +12,15 @@ type User = {
   email?: string;
 };
 
-type State = {
-  users: Map<UserId, User>;
-  currentUserId: UserId;
-};
-
 export const useUsersStore = defineStore('users', {
-  state: (): State => ({
-    users: new Map<UserId, User>(),
-    currentUserId: 0,
+  state: () => ({
+    currentUserId: 0 as UserId,
+    endpoint: {
+      host: '' as string,
+      port: 0 as number,
+      ssl: false as boolean,
+    },
+    users: new Map<UserId, User>() as Map<UserId, User>,
   }),
   getters: {
     currentUser(): User | undefined {
@@ -40,6 +42,36 @@ export const useUsersStore = defineStore('users', {
       }
       this.currentUserId = id;
       return true;
+    },
+    async setEndpoint(
+      host: string,
+      port: number,
+      ssl: boolean
+    ): Promise<boolean> {
+      this.endpoint.host = host;
+      this.endpoint.port = port;
+      this.endpoint.ssl = ssl;
+      return await this.applyEndpoint();
+    },
+    async applyEndpoint(): Promise<boolean> {
+      const hostString = `${this.endpoint.host}:${this.endpoint.port}`;
+      try {
+        $axios.create(
+          `${this.endpoint.ssl ? 'https' : 'http'}://${hostString}`
+        );
+        await $axios.api?.get('/');
+        const { currentUserId } = storeToRefs(useUsersStore());
+        wsMap.set(
+          currentUserId.value,
+          new WsWrapper(
+            `${this.endpoint.ssl ? 'wss' : 'ws'}://${hostString}/oicq`
+          )
+        );
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
     },
   },
   persist: {

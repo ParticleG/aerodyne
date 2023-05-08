@@ -11,8 +11,8 @@
           </div>
           <q-btn-toggle
             :model-value="backendMode"
-            no-caps
             :options="backendModes"
+            no-caps
             toggle-color="primary"
             unelevated
             @update:model-value="updateBackendMode"
@@ -23,25 +23,25 @@
             {{ i18n('labels.useSSL') }}
           </div>
           <q-toggle
+            v-model="useSSl"
             :disable="backendMode === 'multiple'"
             left-label
-            v-model="useSSl"
           />
         </div>
       </q-card-section>
       <q-card-section>
         <div class="row q-gutter-x-sm">
           <q-input
-            class="col-grow"
-            autofocus
+            v-model="hostInput.content"
             :dense="!$q.screen.gt.sm"
             :error="hostInput.error"
             :label="i18n('labels.host')"
             :loading="hostInput.loading"
+            autofocus
+            class="col-grow"
             no-error-icon
             outlined
             type="url"
-            v-model="hostInput.content"
           >
             <template v-slot:error>
               <div>
@@ -50,6 +50,7 @@
             </template>
           </q-input>
           <q-input
+            v-model="portInput.content"
             :dense="!$q.screen.gt.sm"
             :error="portInput.error"
             :label="i18n('labels.port')"
@@ -58,7 +59,6 @@
             maxlength="5"
             no-error-icon
             outlined
-            v-model="portInput.content"
             style="width: 80px"
           >
             <template v-slot:error>
@@ -75,13 +75,12 @@
       <q-card-section>
         <div class="row q-gutter-x-md justify-end">
           <q-btn
-            flat
             :color="$q.dark.isActive ? 'white' : 'black'"
             :label="i18n('labels.cancel')"
+            flat
             @click="onDialogCancel"
           />
           <q-btn
-            color="primary"
             :disabled="
               !hostInput.content ||
               !portInput.content ||
@@ -89,6 +88,7 @@
               portInput.error
             "
             :label="i18n('labels.connect')"
+            color="primary"
             @click="confirm"
           />
         </div>
@@ -97,14 +97,14 @@
   </q-dialog>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useDialogPluginComponent, useQuasar } from 'quasar';
 import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import { EXTRANET_PATTERN, INTRANET_PATTERN } from 'src/utils/constants';
 
-import { useSettingsStore } from 'stores/settings';
+import { useUsersStore } from 'stores/users';
 
 defineEmits([...useDialogPluginComponent.emits]);
 
@@ -118,7 +118,7 @@ const i18n = (relativePath) => {
   return t('components.EndpointDialog.' + relativePath);
 };
 
-const { setEndpoint } = useSettingsStore();
+const { setEndpoint } = useUsersStore();
 
 const backendModes = [
   { label: i18n('labels.multiple'), value: 'multiple' },
@@ -188,7 +188,7 @@ const confirm = async () => {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 @import 'src/css/app';
 
 .q-btn-group {
