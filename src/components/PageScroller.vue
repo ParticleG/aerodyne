@@ -8,7 +8,7 @@
       <q-btn
         v-show="modelValue"
         class="color-auto"
-        :color="onFab ? 'accent' : undefined"
+        :color="trueThen(onFab, 'accent')"
         fab
         icon="arrow_downward"
         @click="emit('click')"
@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { trueThen } from 'src/utils/tools';
 
 export interface Props {
   modelValue: boolean;

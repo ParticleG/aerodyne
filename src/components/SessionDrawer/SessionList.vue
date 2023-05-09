@@ -11,29 +11,29 @@
     <q-item
       v-for="(session, index) in sessions"
       :key="index"
-      class="rounded-borders"
-      :class="mini ? 'q-pa-sm' : undefined"
-      :active="selected === index"
-      active-class="active-session-item text-white"
-      clickable
       v-ripple
+      :active="selected === index"
+      :class="trueThen(mini, 'q-pa-sm')"
+      active-class="active-session-item text-white"
+      class="rounded-borders"
+      clickable
       @click="selected = index"
     >
       <q-item-section avatar>
-        <q-avatar :size="mini ? '54px' : undefined">
+        <q-avatar :size="trueThen(mini, '54px')">
           <q-img :src="session.avatar" />
           <q-badge
             v-show="mini && session.unread > 0"
+            :label="session.unread"
             color="blue"
             floating
-            :label="session.unread"
             rounded
           />
         </q-avatar>
       </q-item-section>
       <q-item-section v-if="!mini">
         <q-item-label>{{ session.name }}</q-item-label>
-        <q-item-label class="ellipsis" caption>
+        <q-item-label caption class="ellipsis">
           {{ session.message.name }}: {{ session.message.text.at(-1) }}
         </q-item-label>
       </q-item-section>
@@ -41,8 +41,8 @@
         <q-item-label caption>{{ session.message.stamp }}</q-item-label>
         <q-badge
           v-show="session.unread > 0"
-          color="blue"
           :label="session.unread"
+          color="blue"
           rounded
         />
       </q-item-section>
@@ -50,12 +50,13 @@
   </q-list>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, ref } from 'vue';
 
 import { SessionItem } from 'components/models';
 
 import { PSEUDO_MESSAGES, PSEUDO_NAMES } from 'src/utils/constants';
+import { trueThen } from 'src/utils/tools';
 
 export interface Props {
   modelValue: number;
@@ -101,7 +102,7 @@ for (let i = 0; i < 100; i++) {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 @import 'src/css/app';
 
 .active-session-item {

@@ -1,9 +1,10 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 
 import { useUsersStore } from 'stores/users';
 import ProfileMenu from 'components/ProfileButton/ProfileMenu.vue';
+import { falseThen } from 'src/utils/tools';
 
 const { currentUser } = storeToRefs(useUsersStore());
 
@@ -12,9 +13,9 @@ const showMenu = ref(false);
 
 <template>
   <q-btn
-    aria-label="Profile"
     :color="$q.dark.isActive ? 'white' : 'dark'"
-    :icon="currentUser ? undefined : 'login'"
+    :icon="falseThen(currentUser, 'login')"
+    aria-label="Profile"
     no-caps
     outline
     round
@@ -22,9 +23,9 @@ const showMenu = ref(false);
   >
     <q-avatar
       v-if="currentUser"
-      :icon="currentUser.avatar ? undefined : 'account_circle'"
-      size="34px"
+      :icon="falseThen(currentUser.avatar, 'account_circle')"
       :text-color="$q.dark.isActive ? 'white' : 'dark'"
+      size="34px"
     >
       <q-img v-if="currentUser.avatar" :src="currentUser.avatar" />
     </q-avatar>

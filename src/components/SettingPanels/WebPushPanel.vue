@@ -4,11 +4,11 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { inject } from 'vue';
 import { MessageType } from 'boot/broadcast';
 
-const $broadcast: BroadcastChannel | undefined = inject('broadcast');
+const $broadcast = inject('broadcast');
 const Subscribe = async () => {
   // noinspection TypeScriptUnresolvedReference
   const permission = await window.Notification.requestPermission();

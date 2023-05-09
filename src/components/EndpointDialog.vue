@@ -23,6 +23,7 @@
             no-error-icon
             outlined
             type="url"
+            @keydown.enter="canConfirm && confirm()"
           >
             <template v-slot:error>
               <div>
@@ -62,12 +63,7 @@
             @click="onDialogCancel"
           />
           <q-btn
-            :disabled="
-              !hostInput.content ||
-              !portInput.content ||
-              hostInput.error ||
-              portInput.error
-            "
+            :disabled="!canConfirm"
             :label="i18n('labels.connect')"
             color="primary"
             @click="confirm"
@@ -124,6 +120,14 @@ const portInput = reactive({
   }),
   loading: false,
 });
+
+const canConfirm = computed(
+  () =>
+    hostInput.content &&
+    portInput.content &&
+    !hostInput.error &&
+    !portInput.error
+);
 
 const i18n = (relativePath) => {
   return t('components.EndpointDialog.' + relativePath);
