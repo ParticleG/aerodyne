@@ -4,31 +4,12 @@
       <q-card-section>
         <div class="text-h6">{{ i18n('labels.title') }}</div>
       </q-card-section>
-      <q-card-section>
-        <div class="row items-baseline justify-between">
-          <div class="text-subtitle2 q-px-xs" style="white-space: pre">
-            {{ i18n('labels.backendMode') }}
-          </div>
-          <q-btn-toggle
-            :model-value="backendMode"
-            :options="backendModes"
-            no-caps
-            toggle-color="primary"
-            unelevated
-            @update:model-value="updateBackendMode"
-          />
-        </div>
-        <div class="row items-center justify-start">
-          <div class="text-subtitle2 q-px-xs" style="white-space: pre">
-            {{ i18n('labels.useSSL') }}
-          </div>
-          <q-toggle
-            v-model="useSSl"
-            :disable="backendMode === 'multiple'"
-            left-label
-          />
-        </div>
-      </q-card-section>
+      <toggle-section
+        :mode="backendMode"
+        :ssl="useSSl"
+        @update:mode="backendMode = $event"
+        @update:ssl="useSSl = $event"
+      />
       <q-card-section>
         <div class="row q-gutter-x-sm">
           <q-input
@@ -102,31 +83,19 @@ import { useDialogPluginComponent, useQuasar } from 'quasar';
 import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import ToggleSection from 'components/EndpointDialog/ToggleSection.vue';
 import { EXTRANET_PATTERN, INTRANET_PATTERN } from 'src/utils/constants';
-
-import { useUsersStore } from 'stores/users';
+import { useSettingsStore } from 'stores/settings';
 
 defineEmits([...useDialogPluginComponent.emits]);
 
 const { dialogRef, onDialogCancel, onDialogHide, onDialogOK } =
   useDialogPluginComponent();
-
 const { notify } = useQuasar();
-
 const { t } = useI18n();
-const i18n = (relativePath) => {
-  return t('components.EndpointDialog.' + relativePath);
-};
+const { setEndpoint } = useSettingsStore();
 
-const { setEndpoint } = useUsersStore();
-
-const backendModes = [
-  { label: i18n('labels.multiple'), value: 'multiple' },
-  { label: i18n('labels.single'), value: 'single' },
-];
-
-const backendMode = ref(backendModes[0].value);
-
+const backendMode = ref('multiple' as 'multiple' | 'single');
 const useSSl = ref(true);
 
 const hostInput = reactive({
@@ -156,11 +125,8 @@ const portInput = reactive({
   loading: false,
 });
 
-const updateBackendMode = (value: string) => {
-  backendMode.value = value;
-  if (value === 'multiple') {
-    useSSl.value = true;
-  }
+const i18n = (relativePath) => {
+  return t('components.EndpointDialog.' + relativePath);
 };
 
 const confirm = async () => {
@@ -169,7 +135,8 @@ const confirm = async () => {
   const success = await setEndpoint(
     hostInput.content,
     Number(portInput.content),
-    useSSl.value
+    useSSl.value,
+    backendMode.value === 'single'
   );
   if (success) {
     notify({

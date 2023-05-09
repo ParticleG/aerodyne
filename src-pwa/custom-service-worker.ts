@@ -1,20 +1,9 @@
-/*
- * This file (which will be your service worker)
- * is picked up by the build system ONLY if
- * quasar.config.js > pwa > workboxMode is set to "injectManifest"
- */
-
-/*
- * This file (which will be your service worker)
- * is picked up by the build system ONLY if
- * quasar.config.js > pwa > workboxMode is set to "injectManifest"
- */
-
-declare const self: ServiceWorkerGlobalScope & typeof globalThis;
-
-import { precacheAndRoute } from 'workbox-precaching';
+import { clientsClaim } from 'workbox-core';
+import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
 
 import { broadcast, MessageType } from 'boot/broadcast';
+
+declare const self: ServiceWorkerGlobalScope & typeof globalThis;
 
 const getPublicKey = async () => {
   const response = await fetch('http://127.0.0.1:3000/service/key', {
@@ -52,8 +41,13 @@ broadcast.onmessage = async (event) => {
   }
 };
 
-// Use with precache injection
+self.skipWaiting().then();
+clientsClaim();
+
+// Use with pre-cache injection
 precacheAndRoute(self.__WB_MANIFEST);
+
+cleanupOutdatedCaches();
 
 self.addEventListener('push', function (event) {
   console.log('On push event');
@@ -94,23 +88,6 @@ self.addEventListener('notificationclick', (event) => {
 });
 
 /*
-declare const self: ServiceWorkerGlobalScope & typeof globalThis;
-
-import { clientsClaim } from 'workbox-core';
-import {
-  precacheAndRoute,
-  cleanupOutdatedCaches,
-  createHandlerBoundToURL,
-} from 'workbox-precaching';
-import { registerRoute, NavigationRoute } from 'workbox-routing';
-
-self.skipWaiting();
-clientsClaim();
-
-// Use with precache injection
-precacheAndRoute(self.__WB_MANIFEST);
-
-cleanupOutdatedCaches();
 
 // Non-SSR fallback to index.html
 // Production SSR fallback to offline.html (except for dev)

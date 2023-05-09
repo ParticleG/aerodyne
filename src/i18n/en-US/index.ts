@@ -39,26 +39,52 @@ export default {
         port: 'Invalid Port',
       },
       labels: {
-        backendMode: 'Backend Mode: ',
         cancel: 'Cancel',
         connect: 'Connect',
         host: 'Host',
-        multiple: 'Multiple Users',
         port: 'Port',
-        single: 'Single User',
         title: 'Connect to an endpoint',
-        useSSL: 'Use SSL',
       },
-      notifications:{
+      notifications: {
         connectFailed: 'Connection failed',
         connectSuccess: 'Connection success',
-      }
+      },
+      ToggleSection: {
+        labels: {
+          backendMode: 'Backend Mode: ',
+          multiple: 'Multiple',
+          single: 'Single',
+          useSSL: 'Use SSL',
+        },
+      },
+    },
+    ProfileButton: {
+      ProfileMenu: {
+        labels: {
+          accountSettings: 'Account Settings',
+          switchAccount: 'Switch Account',
+        },
+      },
+    },
+    SessionDrawer: {
+      SessionSidebar: {
+        labels: {
+          toggleDarkMode: 'Toggle Dark Mode',
+        },
+      },
     },
   },
   pages: {
     ChatPage: {
       labels: {
         loading: 'Loading messages...',
+      },
+    },
+  },
+  stores: {
+    users: {
+      labels: {
+        localUser: 'Local User',
       },
     },
   },

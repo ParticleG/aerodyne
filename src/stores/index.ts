@@ -1,5 +1,5 @@
 import { createPinia } from 'pinia';
-import persistedState from 'pinia-plugin-persistedstate';
+import { createPersistedState } from 'pinia-plugin-persistedstate';
 import { store } from 'quasar/wrappers';
 import { Router } from 'vue-router';
 
@@ -27,6 +27,11 @@ declare module 'pinia' {
 // noinspection JSUnusedGlobalSymbols
 export default store((/* { ssrContext } */) => {
   const pinia = createPinia();
-  pinia.use(persistedState);
+  pinia.use(
+    createPersistedState({
+      auto: true,
+      key: (id) => `aerodyne.${id}`,
+    })
+  );
   return pinia;
 });

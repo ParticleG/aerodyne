@@ -20,7 +20,7 @@ const routes: RouteRecordRaw[] = [
     ],
   },
 
-  // Always leave this as last one,
+  // Always leave this as the last one,
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',

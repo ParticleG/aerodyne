@@ -12,13 +12,13 @@ import { useSettingsStore } from 'stores/settings';
 import { useUsersStore } from 'stores/users';
 
 const { dialog } = useQuasar();
-const { applyDarkMode } = useSettingsStore();
-const { applyEndpoint } = useUsersStore();
-const { endpoint, lastUser } = storeToRefs(useUsersStore());
+const { applyDarkMode, applyEndpoint } = useSettingsStore();
+const { endpoint } = storeToRefs(useSettingsStore());
+const { lastUser } = storeToRefs(useUsersStore());
 
 applyDarkMode();
 
-if (endpoint.value.host === '') {
+if (!endpoint.value.host) {
   dialog({
     component: EndpointDialog,
   }).onOk((backendMode: 'multiple' | 'single') => {

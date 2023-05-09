@@ -2,7 +2,7 @@
 
 A Quasar Powered Real-time Messaging App
 
-## This projects uses ***pnpm*** as the package manager
+## This project uses **_pnpm_** as the package manager
 
 ### Install pnpm (Node.js >= v16.13)
 
@@ -35,7 +35,7 @@ pnpm install
 pnpm run dev-pwa
 ```
 
-### Lint the files
+### Lint files
 
 ```bash
 pnpm run lint

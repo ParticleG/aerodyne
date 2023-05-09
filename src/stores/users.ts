@@ -1,7 +1,9 @@
-import { defineStore, storeToRefs } from 'pinia';
+import { defineStore } from 'pinia';
+import { computed, reactive, Ref, ref } from 'vue';
+
+import { i18nGlobal } from 'boot/i18n';
+
 import { UserId } from 'src/utils/types';
-import { $axios } from 'boot/axios';
-import { wsMap, WsWrapper } from 'boot/accounts';
 
 type User = {
   id: UserId;
@@ -12,69 +14,53 @@ type User = {
   email?: string;
 };
 
-export const useUsersStore = defineStore('users', {
-  state: () => ({
-    currentUserId: 0 as UserId,
-    endpoint: {
-      host: '' as string,
-      port: 0 as number,
-      ssl: false as boolean,
-    },
-    users: new Map<UserId, User>() as Map<UserId, User>,
-  }),
-  getters: {
-    currentUser(): User | undefined {
-      return this.users.get(this.currentUserId);
-    },
-  },
-  actions: {
-    addUser(user: User): boolean {
-      if (this.users.has(user.id)) {
-        return false;
-      }
-      this.users.set(user.id, user);
-      this.currentUserId = user.id;
-      return true;
-    },
-    switchUser(id: UserId): boolean {
-      if (!this.users.has(id)) {
-        return false;
-      }
-      this.currentUserId = id;
-      return true;
-    },
-    async setEndpoint(
-      host: string,
-      port: number,
-      ssl: boolean
-    ): Promise<boolean> {
-      this.endpoint.host = host;
-      this.endpoint.port = port;
-      this.endpoint.ssl = ssl;
-      return await this.applyEndpoint();
-    },
-    async applyEndpoint(): Promise<boolean> {
-      const hostString = `${this.endpoint.host}:${this.endpoint.port}`;
-      try {
-        $axios.create(
-          `${this.endpoint.ssl ? 'https' : 'http'}://${hostString}`
-        );
-        await $axios.api?.get('/');
-        const { currentUserId } = storeToRefs(useUsersStore());
-        wsMap.set(
-          currentUserId.value,
-          new WsWrapper(
-            `${this.endpoint.ssl ? 'wss' : 'ws'}://${hostString}/oicq`
-          )
-        );
-        return true;
-      } catch (error) {
-        console.log(error);
-        return false;
-      }
-    },
-  },
-  persist: {
-    key: 'aerodyne.users',
-  },
+const { t } = i18nGlobal;
+
+export const useUsersStore = defineStore('users', () => {
+  const currentUserId: Ref<UserId> = ref(0);
+  const users: Record<UserId, User> = reactive({});
+
+  const currentUser = computed(() => users[currentUserId.value]);
+
+  const addUser = (user?: User): boolean => {
+    user = user ?? {
+      id: 0,
+      username: t('stores.users.labels.localUser'),
+      permission: 'Super',
+    };
+    if (user.id in users) {
+      return false;
+    }
+    users[user.id] = user;
+    currentUserId.value = user.id;
+    return true;
+  };
+
+  const switchUser = (id: UserId): boolean => {
+    if (!(id in users)) {
+      return false;
+    }
+    currentUserId.value = id;
+    return true;
+  };
+
+  const removeUser = (id: UserId): boolean => {
+    if (!(id in users)) {
+      return false;
+    }
+    delete users[id];
+    if (currentUserId.value === id) {
+      currentUserId.value = 0;
+    }
+    return true;
+  };
+
+  return {
+    currentUserId,
+    users,
+    currentUser,
+    addUser,
+    switchUser,
+    removeUser,
+  };
 });
