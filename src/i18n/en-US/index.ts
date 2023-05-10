@@ -23,6 +23,11 @@ export default {
           cancel: 'Cancel',
           subscribe: 'Subscribe',
         },
+        notifications:{
+          success: 'Subscribe success',
+          failure: 'Subscribe failure',
+          error: 'Subscribe error',
+        }
       },
     },
     EndpointDialog: {

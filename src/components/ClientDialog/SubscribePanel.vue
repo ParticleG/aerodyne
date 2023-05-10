@@ -34,6 +34,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useQuasar } from 'quasar';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
@@ -41,6 +42,7 @@ import { WsAction } from 'types/WsAction';
 import { WsWrapper } from 'types/WsWrapper';
 
 const { t } = useI18n();
+const { notify } = useQuasar();
 const ws: WsWrapper | undefined = inject('ws');
 
 const emit = defineEmits(['click:cancel', 'click:confirm']);
@@ -65,14 +67,36 @@ const subscribeClient = () => {
   ws?.send({
     action: WsAction.Subscribe,
     data: {
-      account: accountInput.content,
+      account: Number(accountInput.content),
     },
   });
 };
 
 ws?.setHandler(WsAction.Subscribe, (data) => {
-  console.log('subscribe', data);
   accountInput.loading = false;
+  switch (data.result) {
+    case 'success':
+      notify({
+        type: 'positive',
+        message: i18n('notifications.success'),
+      });
+      emit('click:confirm');
+      break;
+    case 'failure':
+      notify({
+        type: 'warning',
+        message: i18n('notifications.success'),
+        caption: data.data.toString(),
+      });
+      break;
+    case 'error':
+      notify({
+        type: 'negative',
+        message: i18n('notifications.success'),
+        caption: data.data.toString(),
+      });
+      break;
+  }
 });
 </script>
 

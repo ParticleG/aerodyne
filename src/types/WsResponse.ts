@@ -1,5 +1,6 @@
-import { WsResult } from 'types/common';
 import { WsAction } from 'types/WsAction';
+
+type WsResult = 'success' | 'failure' | 'error';
 
 export class WsResponse {
   action: WsAction;
