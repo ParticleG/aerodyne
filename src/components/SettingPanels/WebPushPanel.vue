@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import { inject } from 'vue';
 
-import { MessageType } from 'boot/broadcast';
+import { MessageType } from 'types/MessageType';
 
 const broadcast: BroadcastChannel | undefined = inject('broadcast');
 const Subscribe = async () => {

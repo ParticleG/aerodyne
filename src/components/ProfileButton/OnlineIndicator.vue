@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 
-import { WsWrapper } from 'boot/ws';
+import { WsWrapper } from 'types/WsWrapper';
 
 const ws: WsWrapper | undefined = inject('ws');
 

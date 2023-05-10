@@ -1,7 +1,8 @@
 import { clientsClaim } from 'workbox-core';
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
 
-import { broadcast, MessageType } from 'boot/broadcast';
+import { broadcast } from 'boot/broadcast';
+import { MessageType } from 'types/MessageType';
 
 declare const self: ServiceWorkerGlobalScope & typeof globalThis;
 

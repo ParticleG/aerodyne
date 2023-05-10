@@ -37,9 +37,8 @@
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { WsWrapper } from 'boot/ws';
-
-import { WsAction } from 'utils/types';
+import { WsAction } from 'types/WsAction';
+import { WsWrapper } from 'types/WsWrapper';
 
 const { t } = useI18n();
 const ws: WsWrapper | undefined = inject('ws');
@@ -63,14 +62,17 @@ const i18n = (relativePath: string) => {
 
 const subscribeClient = () => {
   accountInput.loading = true;
-  setTimeout(() => {
-    accountInput.loading = false;
-    emit('click:confirm');
-  }, 1000);
+  ws?.send({
+    action: WsAction.Subscribe,
+    data: {
+      account: accountInput.content,
+    },
+  });
 };
 
 ws?.setHandler(WsAction.Subscribe, (data) => {
   console.log('subscribe', data);
+  accountInput.loading = false;
 });
 </script>
 

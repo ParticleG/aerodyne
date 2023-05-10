@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, ref, Ref } from 'vue';
 
 import { i18nGlobal } from 'boot/i18n';
-import { UserId } from 'utils/types';
+import { UserId } from 'types/common';
 
 type User = {
   id: UserId;
