@@ -6,9 +6,10 @@
 
 <script lang="ts" setup>
 import { inject } from 'vue';
+
 import { MessageType } from 'boot/broadcast';
 
-const $broadcast = inject('broadcast');
+const broadcast: BroadcastChannel | undefined = inject('broadcast');
 const Subscribe = async () => {
   // noinspection TypeScriptUnresolvedReference
   const permission = await window.Notification.requestPermission();
@@ -19,7 +20,7 @@ const Subscribe = async () => {
   if (permission !== 'granted') {
     throw new Error('Permission not granted for Notification');
   }
-  $broadcast?.postMessage({
+  broadcast?.postMessage({
     type: MessageType.SUBSCRIBE,
   });
 };

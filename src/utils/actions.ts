@@ -1,4 +1,4 @@
-import { WsAction } from 'src/utils/types';
+import { WsAction } from 'utils/types';
 
 interface ActionBase {
   action: WsAction;

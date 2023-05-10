@@ -1,66 +1,66 @@
 import { defineStore } from 'pinia';
-import { computed, reactive, Ref, ref } from 'vue';
+import { computed, ref, Ref } from 'vue';
 
 import { i18nGlobal } from 'boot/i18n';
-
-import { UserId } from 'src/utils/types';
+import { UserId } from 'utils/types';
 
 type User = {
   id: UserId;
-  username: string;
+  username?: string;
   avatar?: string;
   avatar_hash?: string;
-  permission: 'Normal' | 'Admin' | 'Super';
+  permission?: 'Normal' | 'Admin' | 'Super';
   email?: string;
 };
 
 const { t } = i18nGlobal;
 
 export const useUsersStore = defineStore('users', () => {
-  const currentUserId: Ref<UserId> = ref(0);
-  const users: Record<UserId, User> = reactive({});
+  const id: Ref<UserId> = ref(-1);
+  const username: Ref<string | undefined> = ref();
+  const avatar: Ref<string | undefined> = ref();
+  const avatar_hash: Ref<string | undefined> = ref();
+  const permission: Ref<'Normal' | 'Admin' | 'Super' | undefined> = ref();
+  const email: Ref<string | undefined> = ref();
 
-  const currentUser = computed(() => users[currentUserId.value]);
+  const loggedIn = computed(() => id.value >= 0);
 
-  const addUser = (user?: User): boolean => {
-    user = user ?? {
+  const login = (newUser?: User): boolean => {
+    if (loggedIn.value) {
+      return false;
+    }
+    newUser = newUser ?? {
       id: 0,
       username: t('stores.users.labels.localUser'),
       permission: 'Super',
     };
-    if (user.id in users) {
-      return false;
-    }
-    users[user.id] = user;
-    currentUserId.value = user.id;
+    id.value = newUser.id;
+    username.value = newUser.username;
+    avatar.value = newUser.avatar;
+    avatar_hash.value = newUser.avatar_hash;
+    permission.value = newUser.permission;
+    email.value = newUser.email;
     return true;
   };
 
-  const switchUser = (id: UserId): boolean => {
-    if (!(id in users)) {
-      return false;
-    }
-    currentUserId.value = id;
-    return true;
-  };
-
-  const removeUser = (id: UserId): boolean => {
-    if (!(id in users)) {
-      return false;
-    }
-    delete users[id];
-    if (currentUserId.value === id) {
-      currentUserId.value = 0;
-    }
-    return true;
+  const logout = () => {
+    id.value = -1;
+    username.value = undefined;
+    avatar.value = undefined;
+    avatar_hash.value = undefined;
+    permission.value = undefined;
+    email.value = undefined;
   };
 
   return {
-    currentUserId,
-    users,
-    currentUser,
-    addUser,
-    switchUser,
-    removeUser,
+    id,
+    username,
+    avatar,
+    avatar_hash,
+    permission,
+    email,
+    loggedIn,
+    login,
+    logout,
   };
 });

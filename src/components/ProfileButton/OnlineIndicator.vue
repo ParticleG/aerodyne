@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
-import { useUsersStore } from 'stores/users';
-import { storeToRefs } from 'pinia';
 
-const { currentUserId } = storeToRefs(useUsersStore());
-const wsMap = inject('wsMap');
+import { WsWrapper } from 'boot/ws';
+
+const ws: WsWrapper | undefined = inject('ws');
 
 const color = computed(() => {
-  return navigator.onLine
-    ? wsMap.has(currentUserId.value)
-      ? 'green'
-      : 'red'
-    : 'grey';
+  return navigator.onLine ? (ws?.isOpen() ? 'green' : 'red') : 'grey';
 });
 </script>
 

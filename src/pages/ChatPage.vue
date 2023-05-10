@@ -35,9 +35,8 @@ import { useI18n } from 'vue-i18n';
 import { ChatMessage } from 'components/models';
 import ChatList from 'components/ChatPage/ChatList.vue';
 import PageScroller from 'components/PageScroller.vue';
-
-import { PSEUDO_MESSAGES, PSEUDO_NAMES } from 'src/utils/constants';
-import { sleep } from 'src/utils/tools';
+import { PSEUDO_MESSAGES, PSEUDO_NAMES } from 'utils/constants';
+import { sleep } from 'utils/tools';
 
 const { t } = useI18n();
 const i18n = (relativePath) => {
@@ -112,7 +111,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import 'src/css/app';
+@import 'css/app';
 
 body.body--light {
   .q-page {

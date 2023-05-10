@@ -3,12 +3,12 @@ import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { useUsersStore } from 'stores/users';
 import OnlineIndicator from 'components/ProfileButton/OnlineIndicator.vue';
-import { falseThen } from 'src/utils/tools';
+import { useUsersStore } from 'stores/users';
+import { falseThen } from 'utils/tools';
 
 const { t } = useI18n();
-const { currentUser } = storeToRefs(useUsersStore());
+const { avatar, username, loggedIn } = storeToRefs(useUsersStore());
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -28,7 +28,7 @@ const i18n = (relativePath) => {
 };
 
 const goProfile = () => {
-  console.log(currentUser.value);
+  console.log(username);
 };
 
 const switchAccount = () => {
@@ -38,7 +38,7 @@ const switchAccount = () => {
 
 <template>
   <q-menu
-    v-if="currentUser"
+    v-if="loggedIn"
     v-model="isShown"
     :offset="[15, 0]"
     anchor="center right"
@@ -69,11 +69,11 @@ const switchAccount = () => {
         @click="goProfile"
       >
         <q-avatar
-          :icon="falseThen(currentUser.avatar, 'account_circle')"
+          :icon="falseThen(avatar, 'account_circle')"
           :text-color="$q.dark.isActive ? 'white' : 'dark'"
           size="64px"
         >
-          <q-img v-if="currentUser.avatar" :src="currentUser.avatar" />
+          <q-img v-if="avatar" :src="avatar" />
         </q-avatar>
         <online-indicator />
       </q-btn>
@@ -83,7 +83,7 @@ const switchAccount = () => {
         <q-list>
           <q-item>
             <q-item-section class="text-h6">
-              {{ currentUser.username }}
+              {{ username }}
             </q-item-section>
           </q-item>
           <q-separator />

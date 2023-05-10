@@ -34,13 +34,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive } from 'vue';
+import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { WsWrapper } from 'boot/ws';
+
+import { WsAction } from 'utils/types';
+
 const { t } = useI18n();
-const i18n = (relativePath: string) => {
-  return t('components.ClientDialog.SubscribePanel.' + relativePath);
-};
+const ws: WsWrapper | undefined = inject('ws');
 
 const emit = defineEmits(['click:cancel', 'click:confirm']);
 
@@ -55,6 +57,10 @@ const accountInput = reactive({
   loading: false,
 });
 
+const i18n = (relativePath: string) => {
+  return t('components.ClientDialog.SubscribePanel.' + relativePath);
+};
+
 const subscribeClient = () => {
   accountInput.loading = true;
   setTimeout(() => {
@@ -62,6 +68,10 @@ const subscribeClient = () => {
     emit('click:confirm');
   }, 1000);
 };
+
+ws?.setHandler(WsAction.Subscribe, (data) => {
+  console.log('subscribe', data);
+});
 </script>
 
 <style scoped></style>

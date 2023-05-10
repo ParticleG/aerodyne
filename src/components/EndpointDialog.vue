@@ -42,6 +42,7 @@
             no-error-icon
             outlined
             style="width: 80px"
+            @keydown.enter="canConfirm && confirm()"
           >
             <template v-slot:error>
               <div>
@@ -80,8 +81,8 @@ import { computed, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import ToggleSection from 'components/EndpointDialog/ToggleSection.vue';
-import { EXTRANET_PATTERN, INTRANET_PATTERN } from 'src/utils/constants';
 import { useSettingsStore } from 'stores/settings';
+import { EXTRANET_PATTERN, INTRANET_PATTERN } from 'utils/constants';
 
 defineEmits([...useDialogPluginComponent.emits]);
 
@@ -160,7 +161,7 @@ const confirm = async () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/css/app';
+@import 'css/app';
 
 .q-btn-group {
   border: 1px solid $primary;

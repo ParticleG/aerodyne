@@ -2,7 +2,7 @@ import { defineStore, storeToRefs } from 'pinia';
 import { AddressbarColor, colors, Dark } from 'quasar';
 import { computed, reactive, Ref, ref } from 'vue';
 
-import { wsMap, WsWrapper } from 'boot/accounts';
+import { ws } from 'boot/ws';
 import { $axios } from 'boot/axios';
 
 import { useUsersStore } from 'stores/users';
@@ -60,14 +60,14 @@ export const useSettingsStore = defineStore('settings', () => {
   };
 
   const applyEndpoint = async (): Promise<boolean> => {
-    const { currentUser } = storeToRefs(useUsersStore());
+    const { loggedIn } = storeToRefs(useUsersStore());
     try {
       $axios.create(getHttp(endpoint));
       await $axios.api?.get('/');
-      if (endpoint.local && !currentUser.value) {
-        useUsersStore().addUser();
+      if (endpoint.local && !loggedIn.value) {
+        useUsersStore().login();
       }
-      wsMap.set(currentUser.value.id, new WsWrapper(getWs(endpoint)));
+      ws.connect(getWs(endpoint));
       return true;
     } catch (error) {
       console.log(error);

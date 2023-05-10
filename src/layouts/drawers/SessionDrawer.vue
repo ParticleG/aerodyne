@@ -59,8 +59,7 @@ import DrawerResizer from 'components/DrawerResizer.vue';
 import SessionHeader from 'components/SessionDrawer/SessionHeader.vue';
 import SessionList from 'components/SessionDrawer/SessionList.vue';
 import SessionSidebar from 'components/SessionDrawer/SessionSidebar.vue';
-
-import { DRAWER_WIDTHS } from 'src/utils/constants';
+import { DRAWER_WIDTHS } from 'utils/constants';
 
 export interface Props {
   mobile?: boolean;

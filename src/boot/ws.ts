@@ -1,15 +1,16 @@
 import { Notify } from 'quasar';
 import { boot } from 'quasar/wrappers';
 
-import { UserId, WsAction } from 'src/utils/types';
-import { ActionBase } from 'src/utils/actions';
+import { WsAction } from 'utils/types';
+import { ActionBase } from 'utils/actions';
 
 type WsHandler = (message: string) => void;
 
 class WsWrapper {
-  private ws: WebSocket;
+  handlers: Map<WsAction, WsHandler> = new Map();
+  private ws: WebSocket | undefined;
 
-  constructor(url: string) {
+  connect(url: string) {
     this.ws = new WebSocket(url);
     this.ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
@@ -25,18 +26,8 @@ class WsWrapper {
     };
   }
 
-  handlers: Map<WsAction, WsHandler> = new Map();
-
-  setOnOpen(handler: (this: WebSocket, ev: Event) => void) {
-    this.ws.onopen = handler;
-  }
-
-  setOnError(handler: (this: WebSocket, ev: Event) => void) {
-    this.ws.onerror = handler;
-  }
-
-  setOnClose(handler: (this: WebSocket, ev: CloseEvent) => void) {
-    this.ws.onclose = handler;
+  isOpen() {
+    return this.ws?.readyState === WebSocket.OPEN;
   }
 
   setHandler(action: WsAction, handler: WsHandler) {
@@ -48,8 +39,8 @@ class WsWrapper {
   }
 
   send(message: string | ArrayBufferLike | Blob | ArrayBufferView) {
-    if (this.ws.readyState === WebSocket.OPEN) {
-      this.ws.send(message);
+    if (this.isOpen()) {
+      this.ws?.send(message);
     } else {
       console.log('WebSocket not connected');
     }
@@ -60,12 +51,12 @@ class WsWrapper {
   }
 }
 
-const wsMap = new Map<UserId, WsWrapper>();
+const ws = new WsWrapper();
 
 // noinspection JSUnusedGlobalSymbols
 export default boot(({ app }) => {
-  app.config.globalProperties.$wsMap = wsMap;
-  app.provide('wsMap', wsMap);
+  app.config.globalProperties.$ws = ws;
+  app.provide('ws', ws);
 });
 
-export { WsWrapper, wsMap };
+export { WsWrapper, ws };

@@ -23,7 +23,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { trueThen } from 'src/utils/tools';
+
+import { trueThen } from 'utils/tools';
 
 export interface Props {
   modelValue: boolean;

@@ -14,7 +14,7 @@ import { useUsersStore } from 'stores/users';
 const { dialog } = useQuasar();
 const { applyDarkMode, applyEndpoint } = useSettingsStore();
 const { endpoint } = storeToRefs(useSettingsStore());
-const { lastUser } = storeToRefs(useUsersStore());
+const { loggedIn } = storeToRefs(useUsersStore());
 
 applyDarkMode();
 
@@ -22,7 +22,7 @@ if (!endpoint.value.host) {
   dialog({
     component: EndpointDialog,
   }).onOk((backendMode: 'multiple' | 'single') => {
-    if (backendMode === 'multiple' && !lastUser.value) {
+    if (backendMode === 'multiple' && !loggedIn.value) {
       // TODO: implement this
     }
   });

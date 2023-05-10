@@ -54,9 +54,8 @@
 import { computed, ref } from 'vue';
 
 import { SessionItem } from 'components/models';
-
-import { PSEUDO_MESSAGES, PSEUDO_NAMES } from 'src/utils/constants';
-import { trueThen } from 'src/utils/tools';
+import { PSEUDO_MESSAGES, PSEUDO_NAMES } from 'utils/constants';
+import { trueThen } from 'utils/tools';
 
 export interface Props {
   modelValue: number;
@@ -103,7 +102,7 @@ for (let i = 0; i < 100; i++) {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/css/app';
+@import 'css/app';
 
 .active-session-item {
   background: $accent;

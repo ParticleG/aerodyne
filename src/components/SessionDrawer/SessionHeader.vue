@@ -75,7 +75,7 @@ const onEnter = () => {
 </script>
 
 <style scoped lang="scss">
-@import 'src/css/app';
+@import 'css/app';
 
 body.body--light {
   .q-field,
