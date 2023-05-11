@@ -7,11 +7,12 @@ const { t } = useI18n();
 const emit = defineEmits(['update:modelValue']);
 
 export interface Props {
-  modelValue: string;
+  modelValue?: string;
   loading: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  modelValue: '',
   loading: false,
 });
 

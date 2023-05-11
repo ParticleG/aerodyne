@@ -15,42 +15,42 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
 });
 
-const account = computed({
+const sms = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value),
 });
 
-const accountInput = reactive({
-  content: account,
+const smsInput = reactive({
+  content: sms,
   error: computed(() => {
-    if (!accountInput.content) {
+    if (!smsInput.content) {
       return false;
     }
-    return accountInput.content.length < 5;
+    return smsInput.content.length !== 6;
   }),
   loading: false,
 });
 
 const i18n = (relativePath: string) => {
-  return t('components.ClientDialog.AccountInput.' + relativePath);
+  return t('components.ClientDialog.SmsInput.' + relativePath);
 };
 </script>
 
 <template>
   <q-input
-    v-model="accountInput.content"
+    v-model="smsInput.content"
     :dense="!$q.screen.gt.sm"
-    :error="accountInput.error"
-    :label="i18n('labels.account')"
-    :loading="accountInput.loading"
-    :maxlength="12"
+    :error="smsInput.error"
+    :label="i18n('labels.smsCode')"
+    :loading="smsInput.loading"
+    :maxlength="6"
     clearable
     outlined
     type="number"
   >
     <template v-slot:error>
       <div>
-        {{ i18n('errors.account') }}
+        {{ i18n('errors.smsCode') }}
       </div>
     </template>
   </q-input>

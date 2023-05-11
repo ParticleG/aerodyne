@@ -1,14 +1,16 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
-import { computed, inject } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import SmsInput from 'components/ClientDialog/SmsInput.vue';
 import { useSettingsStore } from 'stores/settings';
 import { ClientState } from 'types/ClientState';
 import { LoginData } from 'types/LoginData';
 import { WsAction } from 'types/WsAction';
 import { WsWrapper } from 'types/WsWrapper';
+import { ActionLogin } from 'types/actions';
 
 const { t } = useI18n();
 const { notify } = useQuasar();
@@ -34,8 +36,16 @@ const url = computed(() => {
   return undefined;
 });
 
+const code = ref('');
+const loading = ref(false);
+
 const i18n = (relativePath: string) => {
   return t('components.ClientDialog.VerifyPanel.' + relativePath);
+};
+
+const loginClient = () => {
+  loading.value = true;
+  ws?.send(new ActionLogin(Number(props.account), code.value));
 };
 
 ws?.setHandler(WsAction.Login, (data) => {
@@ -45,6 +55,7 @@ ws?.setHandler(WsAction.Login, (data) => {
         type: 'positive',
         message: i18n('notifications.success'),
       });
+      console.log(data);
       emit('click:confirm', <LoginData>data.data);
       break;
     case 'failure':
@@ -73,20 +84,29 @@ ws?.setHandler(WsAction.Login, (data) => {
     <div>
       {{ i18n('labels.account') + account }}
     </div>
-    <q-responsive :ratio="1" class="full-width">
-      <iframe
-        v-if="props.modelValue?.state === ClientState.WaitingSlider"
-        :src="url"
-        class="fit rounded-borders"
-        style="border: 0"
-      />
+    <q-responsive
+      v-if="props.modelValue?.state === ClientState.WaitingSlider"
+      :ratio="1"
+      class="full-width"
+    >
+      <iframe :src="url" class="fit rounded-borders" style="border: 0" />
     </q-responsive>
+    <sms-input
+      v-if="props.modelValue?.state === ClientState.WaitingSmsCode"
+      v-model="code"
+      :loading="loading"
+    />
     <div class="row q-gutter-x-md justify-end">
       <q-btn
         :color="$q.dark.isActive ? 'white' : 'black'"
         :label="i18n('labels.cancel')"
         flat
         @click="emit('click:cancel')"
+      />
+      <q-btn
+        :label="i18n('labels.login')"
+        color="primary"
+        @click="loginClient"
       />
     </div>
   </q-tab-panel>

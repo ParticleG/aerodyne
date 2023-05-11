@@ -52,11 +52,12 @@ import { computed, ref } from 'vue';
 import { QInput } from 'quasar';
 
 export interface Props {
-  modelValue: string;
+  modelValue?: string;
   mini?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  modelValue: '',
   mini: false,
 });
 

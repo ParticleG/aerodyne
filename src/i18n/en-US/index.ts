@@ -42,6 +42,14 @@ export default {
           password: 'Password',
         },
       },
+      SmsInput: {
+        errors: {
+          smsCode: 'Invalid Sms code',
+        },
+        labels: {
+          smsCode: 'Sms code',
+        },
+      },
       SubscribePanel: {
         labels: {
           cancel: 'Cancel',
