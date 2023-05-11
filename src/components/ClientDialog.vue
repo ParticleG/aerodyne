@@ -21,13 +21,20 @@
             @click:cancel="tabIndex -= 1"
             @click:confirm="handleLoginConfirm"
           />
+          <verify-panel
+            v-model="loginData"
+            :account="account"
+            :name="4"
+            @click:cancel="tabIndex -= 1"
+            @click:confirm="handleLoginConfirm"
+          />
         </q-tab-panels>
       </q-card-section>
     </q-card>
   </q-dialog>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { QDialog, useDialogPluginComponent } from 'quasar';
 import { Ref, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -37,6 +44,7 @@ import SubscribePanel from 'components/ClientDialog/SubscribePanel.vue';
 import LoginPanel from 'components/ClientDialog/LoginPanel.vue';
 import { LoginData } from 'types/LoginData';
 import { ClientState } from 'types/ClientState';
+import VerifyPanel from 'components/ClientDialog/VerifyPanel.vue';
 
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 const { t } = useI18n();
@@ -65,8 +73,8 @@ const handleLoginConfirm = (data: LoginData) => {
     return;
   } else {
     loginData.value = data;
-    tabIndex.value += 1;
   }
+  tabIndex.value = 4;
 };
 </script>
 

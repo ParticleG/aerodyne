@@ -55,15 +55,17 @@ ws?.setHandler(WsAction.Login, (data) => {
       notify({
         type: 'warning',
         message: i18n('notifications.failure'),
-        caption: data.data.toString(),
+        caption: data.data.message,
       });
+      console.log(data);
       break;
     case 'error':
       notify({
         type: 'negative',
         message: i18n('notifications.error'),
-        caption: data.data.toString(),
+        caption: data.data.message,
       });
+      console.log(data);
       break;
   }
 });

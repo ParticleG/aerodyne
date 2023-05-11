@@ -53,6 +53,17 @@ export default {
           error: 'Subscribe error',
         },
       },
+      VerifyPanel: {
+        labels: {
+          account: 'Account: ',
+          cancel: 'Back',
+        },
+        notifications: {
+          success: 'Verify success',
+          failure: 'Verify failure',
+          error: 'Verify error',
+        },
+      },
     },
     EndpointDialog: {
       descriptions: {
