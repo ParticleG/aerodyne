@@ -8,26 +8,50 @@ export default {
           subscribe: 'Subscribe a new account',
         },
       },
+      AccountInput: {
+        errors: {
+          account: 'Invalid Account',
+        },
+        labels: {
+          account: 'Account',
+        },
+      },
       InfoPanel: {
         labels: {
           title: 'Client Info',
           ok: 'OK',
         },
       },
-      SubscribePanel: {
+      LoginPanel: {
+        labels: {
+          account: 'Account: ',
+          cancel: 'Back',
+          subscribe: 'Login',
+        },
+        notifications: {
+          success: 'Login success',
+          failure: 'Login failure',
+          error: 'Login error',
+        },
+      },
+      PasswordInput: {
         errors: {
-          account: 'Invalid Account',
+          password: 'Invalid Password',
         },
         labels: {
-          account: 'Account',
+          password: 'Password',
+        },
+      },
+      SubscribePanel: {
+        labels: {
           cancel: 'Cancel',
           subscribe: 'Subscribe',
         },
-        notifications:{
+        notifications: {
           success: 'Subscribe success',
           failure: 'Subscribe failure',
           error: 'Subscribe error',
-        }
+        },
       },
     },
     EndpointDialog: {

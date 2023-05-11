@@ -6,13 +6,20 @@
       </q-card-section>
       <q-card-section>
         <q-tab-panels v-model="tabIndex">
-          <InfoPanel :name="1" @click:cancel="hide" />
+          <info-panel :name="1" @click:cancel="onDialogHide" />
         </q-tab-panels>
         <q-tab-panels v-model="tabIndex">
-          <SubscribePanel
+          <subscribe-panel
+            v-model="account"
             :name="2"
-            @click:cancel="hide"
+            @click:cancel="onDialogHide"
             @click:confirm="tabIndex += 1"
+          />
+          <login-panel
+            v-model="account"
+            :name="3"
+            @click:cancel="tabIndex -= 1"
+            @click:confirm="handleLoginConfirm"
           />
         </q-tab-panels>
       </q-card-section>
@@ -22,32 +29,44 @@
 
 <script setup lang="ts">
 import { QDialog, useDialogPluginComponent } from 'quasar';
-import { ref } from 'vue';
+import { Ref, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import InfoPanel from 'components/ClientDialog/InfoPanel.vue';
 import SubscribePanel from 'components/ClientDialog/SubscribePanel.vue';
+import LoginPanel from 'components/ClientDialog/LoginPanel.vue';
+import { LoginData } from 'types/LoginData';
+import { ClientState } from 'types/ClientState';
+
+const { dialogRef, onDialogHide } = useDialogPluginComponent();
+const { t } = useI18n();
+
+defineEmits([...useDialogPluginComponent.emits]);
 
 export interface Props {
   type: 'account' | 'subscribe' | 'login';
 }
 
 const props = defineProps<Props>();
-
-const { dialogRef, onDialogHide } = useDialogPluginComponent();
-defineEmits([...useDialogPluginComponent.emits]);
-
-const { t } = useI18n();
-const i18n = (relativePath) => {
-  return t('components.ClientDialog.' + relativePath);
-};
-
 const tabIndex = ref(
   props.type === 'account' ? 1 : props.type === 'subscribe' ? 2 : 3
 );
 
-const hide = () => {
-  (dialogRef.value as QDialog).hide();
+const account = ref('');
+const loginData: Ref<undefined | LoginData> = ref();
+
+const i18n = (relativePath) => {
+  return t('components.ClientDialog.' + relativePath);
+};
+
+const handleLoginConfirm = (data: LoginData) => {
+  if (data.state === ClientState.Online) {
+    onDialogHide();
+    return;
+  } else {
+    loginData.value = data;
+    tabIndex.value += 1;
+  }
 };
 </script>
 

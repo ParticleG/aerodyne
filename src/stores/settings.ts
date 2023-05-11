@@ -46,6 +46,8 @@ export const useSettingsStore = defineStore('settings', () => {
     }
   });
 
+  const httpUrl = computed(() => getHttp(endpoint));
+
   const applyDarkMode = () => {
     Dark.set(darkMode.value);
     AddressbarColor.set(
@@ -92,6 +94,7 @@ export const useSettingsStore = defineStore('settings', () => {
     darkMode,
     endpoint,
     darkModeColorAndIcon,
+    httpUrl,
     applyDarkMode,
     toggleDarkMode,
     applyEndpoint,

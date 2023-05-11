@@ -1,8 +1,8 @@
 export enum ClientState {
-  Null = -1,
-  Offline,
-  WaitingSmsCode,
-  WaitingQRCode,
-  WaitingSlider,
-  Online,
+  Initializing = 'Initializing',
+  Offline = 'Offline',
+  WaitingSmsCode = 'WaitingSmsCode',
+  WaitingQRCode = 'WaitingQRCode',
+  WaitingSlider = 'WaitingSlider',
+  Online = 'Online',
 }

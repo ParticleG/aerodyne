@@ -5,10 +5,22 @@ import { WsHandler } from 'types/common';
 
 export class WsWrapper {
   handlers: Map<WsAction, WsHandler> = new Map();
+  private url = '';
   private ws: WebSocket | undefined;
 
   connect(url: string) {
+    this.url = url;
     this.ws = new WebSocket(url);
+    this.ws.onclose = () => {
+      Notify.create({
+        type: 'negative',
+        message: 'WebSocket closed, reconnecting...',
+        icon: 'close',
+      });
+      setTimeout(() => {
+        this.connect(this.url);
+      }, 3000);
+    };
     this.ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (this.handlers.has(message.action)) {
@@ -16,10 +28,19 @@ export class WsWrapper {
       } else {
         Notify.create({
           type: 'warning',
-          message: `Unknown action(${message.action}): ${message}`,
+          message: `Unknown action: ${message.action}`,
+          caption: JSON.stringify(message.data),
           icon: 'help_outline',
         });
+        console.log(message);
       }
+    };
+    this.ws.onopen = () => {
+      Notify.create({
+        type: 'positive',
+        message: 'WebSocket connected',
+        icon: 'check',
+      });
     };
   }
 

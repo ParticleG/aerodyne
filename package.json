@@ -32,6 +32,7 @@
     "eslint": "^8.40.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-vue": "^9.11.1",
+    "icqq": "^0.3.10",
     "prettier": "^2.8.8",
     "typescript": "^5.0.4",
     "workbox-build": "^6.5.0",

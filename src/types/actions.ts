@@ -5,42 +5,56 @@ export interface ActionBase {
   data?: unknown;
 }
 
-export interface ActionMonitor extends ActionBase {
-  action: WsAction.Monitor;
-  data: null;
+export class ActionMonitor implements ActionBase {
+  action = WsAction.Monitor;
 }
 
-export interface ActionList extends ActionBase {
-  action: WsAction.List;
-  data: null;
+export class ActionList implements ActionBase {
+  action = WsAction.List;
 }
 
-export interface ActionSubscribe extends ActionBase {
-  action: WsAction.Subscribe;
+export class ActionSubscribe implements ActionBase {
+  action = WsAction.Subscribe;
   data: {
     account: number;
   };
+
+  constructor(account: number) {
+    this.data = { account };
+  }
 }
 
-export interface ActionLogin extends ActionBase {
-  action: WsAction.Login;
+export class ActionLogin implements ActionBase {
+  action = WsAction.Login;
   data: {
     account: number;
     payload?: string;
   };
+
+  constructor(account: number, payload?: string) {
+    this.data = { account, payload };
+  }
 }
 
-export interface ActionLogout extends ActionBase {
-  action: WsAction.Logout;
+export class ActionLogout implements ActionBase {
+  action = WsAction.Logout;
   data: {
     account: number;
   };
+
+  constructor(account: number) {
+    this.data = { account };
+  }
 }
 
-export interface ActionMessage extends ActionBase {
-  action: WsAction.Message;
+export class ActionMessage implements ActionBase {
+  action = WsAction.Message;
   data: {
     sender: number;
     message: string;
   };
+
+  constructor(sender: number, message: string) {
+    this.data = { sender, message };
+  }
 }
