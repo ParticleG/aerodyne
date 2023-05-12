@@ -9,7 +9,7 @@
     :width="mobile ? $q.screen.width : width"
   >
     <div class="row no-wrap">
-      <SessionSidebar />
+      <SessionSidebar v-model="account"/>
       <q-separator vertical />
       <div style="flex: 1 1 auto; min-width: 0">
         <SessionHeader
@@ -18,6 +18,7 @@
           @keydown.enter="selectSession(0)"
         />
         <SessionList
+          :account="account"
           :model-value="selectedSession"
           :mini="isMini"
           @mouseenter="showFab = true"
@@ -61,18 +62,17 @@ import SessionList from 'components/SessionDrawer/SessionList.vue';
 import SessionSidebar from 'components/SessionDrawer/SessionSidebar.vue';
 import { DRAWER_WIDTHS } from 'utils/constants';
 
+const { screen } = useQuasar();
+
+const emit = defineEmits(['toggle:drawer']);
 export interface Props {
   mobile?: boolean;
 }
-
 const props = withDefaults(defineProps<Props>(), {
   mobile: false,
 });
 
-const emit = defineEmits(['toggle:drawer']);
-
-const { screen } = useQuasar();
-
+const account = ref(-1);
 const width = ref(500);
 const searchText = ref('');
 const selectedSession = ref(-1);

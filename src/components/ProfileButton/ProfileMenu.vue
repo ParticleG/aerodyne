@@ -4,11 +4,11 @@ import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import OnlineIndicator from 'components/ProfileButton/OnlineIndicator.vue';
-import { useUsersStore } from 'stores/users';
+import { useUserStore } from 'stores/user';
 import { falseThen } from 'utils/tools';
 
 const { t } = useI18n();
-const { avatar, username, loggedIn } = storeToRefs(useUsersStore());
+const { avatar, username, loggedIn } = storeToRefs(useUserStore());
 
 const emit = defineEmits(['update:modelValue']);
 

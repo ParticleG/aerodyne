@@ -58,3 +58,14 @@ export class ActionMessage implements ActionBase {
     this.data = { sender, message };
   }
 }
+
+export class ActionClientInfo implements ActionBase {
+  action = WsAction.ClientInfo;
+  data: {
+    account: number;
+  };
+
+  constructor(account: number) {
+    this.data = { account };
+  }
+}

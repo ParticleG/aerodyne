@@ -6,4 +6,5 @@ export enum WsAction {
   Login = 'Login',
   Logout = 'Logout',
   Message = 'Message',
+  ClientInfo = 'ClientInfo',
 }

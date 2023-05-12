@@ -92,7 +92,7 @@ const { notify } = useQuasar();
 const { t } = useI18n();
 const { setEndpoint } = useSettingsStore();
 
-const backendMode = ref('multiple' as 'multiple' | 'single');
+const backendMode = ref('single' as 'multiple' | 'single');
 const useSSl = ref(true);
 
 const hostInput = reactive({

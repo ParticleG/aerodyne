@@ -36,7 +36,7 @@
 
 <script lang="ts" setup>
 import { QDialog, useDialogPluginComponent } from 'quasar';
-import { Ref, ref } from 'vue';
+import { inject, Ref, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import InfoPanel from 'components/ClientDialog/InfoPanel.vue';
@@ -45,9 +45,12 @@ import LoginPanel from 'components/ClientDialog/LoginPanel.vue';
 import { LoginData } from 'types/LoginData';
 import { ClientState } from 'types/ClientState';
 import VerifyPanel from 'components/ClientDialog/VerifyPanel.vue';
+import { WsWrapper } from 'types/WsWrapper';
+import { ActionClientInfo } from 'types/actions';
 
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 const { t } = useI18n();
+const ws: WsWrapper | undefined = inject('ws');
 
 defineEmits([...useDialogPluginComponent.emits]);
 
@@ -68,7 +71,9 @@ const i18n = (relativePath) => {
 };
 
 const handleLoginConfirm = (data: LoginData) => {
+  console.log(data);
   if (data.state === ClientState.Online) {
+    ws?.send(new ActionClientInfo(Number(account.value)));
     onDialogHide();
     return;
   } else {

@@ -15,7 +15,7 @@ type User = {
 
 const { t } = i18nGlobal;
 
-export const useUsersStore = defineStore('users', () => {
+export const useUserStore = defineStore('user', () => {
   const id: Ref<UserId> = ref(-1);
   const username: Ref<string | undefined> = ref();
   const avatar: Ref<string | undefined> = ref();

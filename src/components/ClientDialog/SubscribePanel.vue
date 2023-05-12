@@ -23,7 +23,7 @@ import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import AccountInput from 'components/ClientDialog/AccountInput.vue';
-import { ActionSubscribe } from 'types/actions';
+import { ActionClientInfo, ActionSubscribe } from 'types/actions';
 import { WsAction } from 'types/WsAction';
 import { WsWrapper } from 'types/WsWrapper';
 import { ClientState } from 'types/ClientState';
@@ -68,6 +68,7 @@ ws?.setHandler(WsAction.Subscribe, (data) => {
         message: i18n('notifications.success'),
       });
       if ((data.data as ClientState) === ClientState.Online) {
+        ws?.send(new ActionClientInfo(Number(account.value)));
         emit('click:cancel');
       } else {
         emit('click:confirm');

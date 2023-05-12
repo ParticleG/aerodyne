@@ -3,10 +3,10 @@ import { storeToRefs } from 'pinia';
 import { ref } from 'vue';
 
 import ProfileMenu from 'components/ProfileButton/ProfileMenu.vue';
-import { useUsersStore } from 'stores/users';
+import { useUserStore } from 'stores/user';
 import { falseThen } from 'utils/tools';
 
-const { loggedIn, avatar } = storeToRefs(useUsersStore());
+const { loggedIn, avatar } = storeToRefs(useUserStore());
 
 const showMenu = ref(false);
 </script>

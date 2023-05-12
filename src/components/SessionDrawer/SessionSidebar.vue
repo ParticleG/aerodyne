@@ -1,6 +1,19 @@
 <template>
   <div class="column col-auto items-center">
     <q-btn flat icon="menu" padding="md" />
+    <q-btn
+      v-for="(client, key) in clients"
+      :key="key"
+      color="primary"
+      :flat="account !== client.account"
+      round
+      :unelevated="account === client.account"
+      @click="account = client.account"
+    >
+      <q-avatar>
+        <q-img :src="client.avatarUrl" />
+      </q-avatar>
+    </q-btn>
     <q-btn flat icon="add" padding="md" @click="subscribeAccount" />
     <q-space />
     <q-separator class="full-width" />
@@ -35,11 +48,26 @@ import { useI18n } from 'vue-i18n';
 import ClientDialog from 'components/ClientDialog.vue';
 import { useSettingsStore } from 'stores/settings';
 import ProfileButton from 'components/ProfileButton.vue';
+import { useClientStore } from 'stores/client';
+import { computed } from 'vue';
 
 const { t } = useI18n();
+const { clients } = storeToRefs(useClientStore());
 const { toggleDarkMode } = useSettingsStore();
 const { darkModeColorAndIcon } = storeToRefs(useSettingsStore());
 const { dialog } = useQuasar();
+
+const emit = defineEmits(['update:modelValue']);
+
+export interface Props {
+  modelValue: number;
+}
+
+const props = defineProps<Props>();
+const account = computed({
+  get: () => props.modelValue,
+  set: (value) => emit('update:modelValue', value),
+});
 
 const i18n = (relativePath) => {
   return t('components.SessionDrawer.SessionSidebar.' + relativePath);

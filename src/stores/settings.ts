@@ -5,7 +5,7 @@ import { computed, reactive, Ref, ref } from 'vue';
 import { ws } from 'boot/ws';
 import { $axios } from 'boot/axios';
 
-import { useUsersStore } from 'stores/users';
+import { useUserStore } from 'stores/user';
 
 type Endpoint = {
   host: string;
@@ -62,12 +62,12 @@ export const useSettingsStore = defineStore('settings', () => {
   };
 
   const applyEndpoint = async (): Promise<boolean> => {
-    const { loggedIn } = storeToRefs(useUsersStore());
+    const { loggedIn } = storeToRefs(useUserStore());
     try {
       $axios.create(getHttp(endpoint));
       await $axios.api?.get('/');
       if (endpoint.local && !loggedIn.value) {
-        useUsersStore().login();
+        useUserStore().login();
       }
       ws.connect(getWs(endpoint));
       return true;

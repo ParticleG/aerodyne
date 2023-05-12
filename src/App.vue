@@ -8,18 +8,19 @@ import { useQuasar } from 'quasar';
 
 import EndpointDialog from 'components/EndpointDialog.vue';
 
-import { useSettingsStore } from 'stores/settings';
-import { useUsersStore } from 'stores/users';
+import { useClientStore } from 'stores/client';
 import { useMessagesStore } from 'stores/messages';
+import { useSettingsStore } from 'stores/settings';
+import { useUserStore } from 'stores/user';
 
 const { dialog } = useQuasar();
-const { registerHandler } = useMessagesStore();
 const { applyDarkMode, applyEndpoint } = useSettingsStore();
 const { endpoint } = storeToRefs(useSettingsStore());
-const { loggedIn } = storeToRefs(useUsersStore());
+const { loggedIn } = storeToRefs(useUserStore());
 
 applyDarkMode();
-registerHandler();
+useClientStore().registerHandler();
+useMessagesStore().registerHandler();
 
 if (!endpoint.value.host) {
   dialog({
