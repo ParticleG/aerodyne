@@ -6,11 +6,10 @@ import { useI18n } from 'vue-i18n';
 
 import SmsInput from 'components/ClientDialog/SmsInput.vue';
 import { useSettingsStore } from 'stores/settings';
+import { ActionLogin, WsAction } from 'types/actions';
 import { ClientState } from 'types/ClientState';
 import { LoginData } from 'types/LoginData';
-import { WsAction } from 'types/WsAction';
 import { WsWrapper } from 'types/WsWrapper';
-import { ActionLogin } from 'types/actions';
 
 const { t } = useI18n();
 const { notify } = useQuasar();

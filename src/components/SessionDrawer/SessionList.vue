@@ -39,9 +39,9 @@
         </q-item-label>
       </q-item-section>
       <q-item-section v-if="!mini" class="q-gutter-y-sm" side>
-        <q-item-label caption>{{
-          currentRecentSender.message.time
-        }}</q-item-label>
+        <q-item-label caption
+          >{{ currentRecentSender.message.time }}
+        </q-item-label>
         <q-badge
           v-show="currentRecentSender.unread > 0"
           :label="currentRecentSender.unread"
@@ -81,33 +81,6 @@ const selected = computed({
 const currentRecentSenders: ComputedRef<MessageContainer[]> = computed(
   () => recentSenders.value[props.account]
 );
-
-// const sessions = ref(new Array<SessionItem>());
-// for (let i = 0; i < 100; i++) {
-//   const name = PSEUDO_NAMES[Math.floor(Math.random() * PSEUDO_NAMES.length)];
-//   const text = [];
-//   for (let i = 0; i < Math.ceil(Math.random() * 5); i++) {
-//     text.push(
-//       PSEUDO_MESSAGES[Math.floor(Math.random() * PSEUDO_MESSAGES.length)]
-//     );
-//   }
-//   sessions.value.push({
-//     avatar: `https://cdn.quasar.dev/img/avatar${Math.ceil(
-//       Math.random() * PSEUDO_NAMES.length
-//     )}.jpg`,
-//     message: {
-//       avatar: `https://cdn.quasar.dev/img/avatar${Math.ceil(
-//         Math.random() * PSEUDO_NAMES.length
-//       )}.jpg`,
-//       name: name,
-//       sent: name === 'Me',
-//       stamp: 'Just now',
-//       text: text,
-//     },
-//     name: 'Session ' + i,
-//     unread: Math.round(Math.random() * 50),
-//   });
-// }
 </script>
 
 <style lang="scss" scoped>

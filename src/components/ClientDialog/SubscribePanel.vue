@@ -23,8 +23,7 @@ import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import AccountInput from 'components/ClientDialog/AccountInput.vue';
-import { ActionClientInfo, ActionSubscribe } from 'types/actions';
-import { WsAction } from 'types/WsAction';
+import { ActionClientInfo, ActionSubscribe,WsAction } from 'types/actions';
 import { WsWrapper } from 'types/WsWrapper';
 import { ClientState } from 'types/ClientState';
 

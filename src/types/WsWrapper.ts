@@ -1,10 +1,17 @@
-import { WsAction } from 'types/WsAction';
 import { Notify } from 'quasar';
-import { ActionBase } from 'types/actions';
-import { WsHandler } from 'types/common';
+import { ActionBase, WsAction } from 'types/actions';
+import {
+  WsErrorResponse,
+  WsFailureResponse,
+  WsResponse,
+} from 'types/responses';
+
+export type WsHandler<T extends WsResponse> = (
+  message: T | WsFailureResponse | WsErrorResponse
+) => void;
 
 export class WsWrapper {
-  handlers: Map<WsAction, WsHandler> = new Map();
+  handlers: Map<WsAction, WsHandler<never>> = new Map();
   private url = '';
   private ws: WebSocket | undefined;
 
@@ -48,7 +55,7 @@ export class WsWrapper {
     return this.ws?.readyState === WebSocket.OPEN;
   }
 
-  setHandler(action: WsAction, handler: WsHandler) {
+  setHandler<T extends WsResponse>(action: WsAction, handler: WsHandler<T>) {
     this.handlers.set(action, handler);
   }
 

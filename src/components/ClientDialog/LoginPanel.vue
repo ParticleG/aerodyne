@@ -1,12 +1,12 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useQuasar } from 'quasar';
 import { computed, inject, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import PasswordInput from 'components/ClientDialog/PasswordInput.vue';
-import { ActionLogin } from 'types/actions';
-import { WsAction } from 'types/WsAction';
-import { WsWrapper } from 'types/WsWrapper';
+import { ActionLogin, WsAction } from 'types/actions';
+import { ResponseLogin } from 'types/responses';
+import { WsHandler, WsWrapper } from 'types/WsWrapper';
 import { LoginData } from 'types/LoginData';
 
 const { t } = useI18n();
@@ -41,7 +41,7 @@ const loginClient = () => {
   ws?.send(new ActionLogin(Number(account.value), password.value));
 };
 
-ws?.setHandler(WsAction.Login, (data) => {
+ws?.setHandler(WsAction.Login, <WsHandler<ResponseLogin>>((data) => {
   loading.value = false;
   switch (data.result) {
     case 'success':
@@ -49,7 +49,7 @@ ws?.setHandler(WsAction.Login, (data) => {
         type: 'positive',
         message: i18n('notifications.success'),
       });
-      emit('click:confirm', <LoginData>data.data);
+      emit('click:confirm', data.data);
       break;
     case 'failure':
       notify({
@@ -68,7 +68,7 @@ ws?.setHandler(WsAction.Login, (data) => {
       console.log(data);
       break;
   }
-});
+}));
 </script>
 
 <template>

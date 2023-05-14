@@ -1,10 +1,11 @@
+import { DiscussMessage, GroupMessage, PrivateMessage } from 'icqq';
 import { defineStore } from 'pinia';
 import { reactive } from 'vue';
+
 import { ws } from 'boot/ws';
-import { WsAction } from 'types/WsAction';
-import { DiscussMessage, GroupMessage, PrivateMessage } from 'icqq';
-import { OicqAccount } from 'types/common';
 import { useClientStore } from 'stores/client';
+import { WsAction } from 'types/actions';
+import { OicqAccount } from 'types/common';
 
 export type OicqMessage = DiscussMessage | GroupMessage | PrivateMessage;
 export type MessageType = 'discuss' | 'group' | 'private';
@@ -26,6 +27,7 @@ export interface MessageContainer {
   };
   unread: number;
 }
+
 export const useMessagesStore = defineStore(
   'messages',
   () => {
@@ -36,7 +38,7 @@ export const useMessagesStore = defineStore(
 
     const recentSenders: Record<OicqAccount, MessageContainer[]> = reactive({});
 
-    const registerHandler = () => {
+    const initialize = () => {
       ws.setHandler(WsAction.Message, (wsResponse) => {
         if (wsResponse.result === 'success') {
           const { clients } = useClientStore();
@@ -60,6 +62,7 @@ export const useMessagesStore = defineStore(
           );
 
           let lastUnread = 0;
+          console.log(recentSenders[messageBuffer.account]);
           recentSenders[messageBuffer.account] ??= [];
           recentSenders[messageBuffer.account] = recentSenders[
             messageBuffer.account
@@ -69,6 +72,7 @@ export const useMessagesStore = defineStore(
             }
             return sender.id !== id && sender.type !== message.message_type;
           });
+          console.log(recentSenders[messageBuffer.account]);
           recentSenders[messageBuffer.account].unshift({
             id: id,
             type: message.message_type,
@@ -80,8 +84,8 @@ export const useMessagesStore = defineStore(
                 : message.sender.nickname,
             avatar:
               message.message_type === 'private'
-                ? clients[messageBuffer.account]?.friendList[id].avatarUrl
-                : clients[messageBuffer.account]?.groupList[id].avatarUrl,
+                ? clients[messageBuffer.account]?.friendList[id]?.avatarUrl
+                : clients[messageBuffer.account]?.groupList[id]?.avatarUrl,
             message: {
               name: message.sender.nickname,
               text: message.raw_message,
@@ -89,13 +93,14 @@ export const useMessagesStore = defineStore(
             },
             unread: lastUnread + 1,
           });
+          console.log(recentSenders[messageBuffer.account]);
         }
       });
     };
     return {
       messages,
       recentSenders,
-      registerHandler,
+      initialize,
     };
   },
   {

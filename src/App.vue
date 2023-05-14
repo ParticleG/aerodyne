@@ -19,8 +19,7 @@ const { endpoint } = storeToRefs(useSettingsStore());
 const { loggedIn } = storeToRefs(useUserStore());
 
 applyDarkMode();
-useClientStore().registerHandler();
-useMessagesStore().registerHandler();
+useMessagesStore().initialize();
 
 if (!endpoint.value.host) {
   dialog({
@@ -31,6 +30,9 @@ if (!endpoint.value.host) {
     }
   });
 } else {
-  (async () => await applyEndpoint())();
+  (async () => {
+    await applyEndpoint();
+    await useClientStore().initialize();
+  })();
 }
 </script>
