@@ -7,7 +7,6 @@ import PasswordInput from 'components/ClientDialog/PasswordInput.vue';
 import { ActionLogin, WsAction } from 'types/actions';
 import { ResponseLogin } from 'types/responses';
 import { WsHandler, WsWrapper } from 'types/WsWrapper';
-import { LoginData } from 'types/LoginData';
 
 const { t } = useI18n();
 const { notify } = useQuasar();
