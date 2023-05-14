@@ -9,7 +9,7 @@
     :width="mobile ? $q.screen.width : width"
   >
     <div class="row no-wrap">
-      <SessionSidebar v-model="account"/>
+      <SessionSidebar v-model="account" />
       <q-separator vertical />
       <div style="flex: 1 1 auto; min-width: 0">
         <SessionHeader

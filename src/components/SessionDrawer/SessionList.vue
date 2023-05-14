@@ -39,7 +39,9 @@
         </q-item-label>
       </q-item-section>
       <q-item-section v-if="!mini" class="q-gutter-y-sm" side>
-        <q-item-label caption>{{ currentRecentSender.message.time }}</q-item-label>
+        <q-item-label caption>{{
+          currentRecentSender.message.time
+        }}</q-item-label>
         <q-badge
           v-show="currentRecentSender.unread > 0"
           :label="currentRecentSender.unread"
