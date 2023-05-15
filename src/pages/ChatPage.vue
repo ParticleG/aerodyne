@@ -40,8 +40,6 @@ import { useClientStore } from 'stores/client';
 const { t } = useI18n();
 const { currentMessages } = storeToRefs(useClientStore());
 
-
-
 const scrollTarget = ref(null);
 const loading = ref(false);
 const inMiddle = ref(false);

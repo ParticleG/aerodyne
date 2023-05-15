@@ -1,6 +1,6 @@
 export default {
   components: {
-    ChatPage:{
+    ChatPage: {
       ChatList: {
         labels: {
           justNow: 'Just now',

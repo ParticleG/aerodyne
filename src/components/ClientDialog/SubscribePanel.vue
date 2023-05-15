@@ -48,7 +48,9 @@ const subscribeClient = () => {
   ws.send(new ActionSubscribe(currentAccount.value));
 };
 
-externalHandlers.value.set(WsAction.Subscribe, <WsHandler<ResponseSubscribe>>((wsResponse) => {
+externalHandlers.value.set(WsAction.Subscribe, <WsHandler<ResponseSubscribe>>((
+  wsResponse
+) => {
   loading.value = false;
   switch (wsResponse.result) {
     case 'success':

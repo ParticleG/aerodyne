@@ -8,8 +8,12 @@
           message.message_type === 'private'
             ? currentClient.friends[message.sender.user_id]?.avatarUrl
             : message.message_type === 'discuss'
-            ? currentClient.groups[message.discuss_id]?.memberMap?.[message.sender.user_id]?.avatarUrl
-            : currentClient.groups[message.group_id]?.memberMap?.[message.sender.user_id]?.avatarUrl
+            ? currentClient.groups[message.discuss_id]?.memberMap?.[
+                message.sender.user_id
+              ]?.avatarUrl
+            : currentClient.groups[message.group_id]?.memberMap?.[
+                message.sender.user_id
+              ]?.avatarUrl
         "
         :bg-color="
           message.sender.user_id === currentClient.account

@@ -15,10 +15,7 @@ const { t } = useI18n();
 const { notify } = useQuasar();
 const { currentAccount, externalHandlers } = storeToRefs(useClientStore());
 
-const emit = defineEmits([
-  'click:cancel',
-  'click:confirm',
-]);
+const emit = defineEmits(['click:cancel', 'click:confirm']);
 
 const loading = ref(false);
 const password = ref('');
@@ -32,7 +29,9 @@ const loginClient = () => {
   ws.send(new ActionLogin(currentAccount.value, password.value));
 };
 
-externalHandlers.value.set(WsAction.Login, <WsHandler<ResponseLogin>>((wsResponse) => {
+externalHandlers.value.set(WsAction.Login, <WsHandler<ResponseLogin>>((
+  wsResponse
+) => {
   loading.value = false;
   switch (wsResponse.result) {
     case 'success':
