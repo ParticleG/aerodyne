@@ -16,21 +16,6 @@ import {
   WsResponse,
 } from 'types/responses';
 
-type MessageType = 'discuss' | 'group' | 'private';
-
-export interface MessageContainer {
-  id: number;
-  type: MessageType;
-  name: string;
-  avatarUrl: string;
-  message: {
-    name: string;
-    text: string;
-    time: number;
-  };
-  unread: number;
-}
-
 export const useClientStore = defineStore(
   'client',
   () => {
