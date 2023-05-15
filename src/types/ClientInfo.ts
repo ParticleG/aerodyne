@@ -8,6 +8,7 @@ import {
 } from 'icqq';
 
 import { OicqAccount } from 'types/common';
+import { ClientState } from 'types/ClientState';
 
 export interface FriendData extends FriendInfo {
   lastUpdate: Date;
@@ -26,11 +27,12 @@ export interface GroupData extends GroupInfo {
 
 export interface ClientInfo {
   account: OicqAccount;
+  state: ClientState;
   avatarUrl: string;
   status: OnlineStatus;
   nickname: string;
   sex: Gender;
   age: number;
-  friendList: FriendData[];
-  groupList: GroupData[];
+  friends: Record<number, FriendData>;
+  groups: Record<number, GroupData>;
 }

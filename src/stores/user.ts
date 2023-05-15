@@ -14,6 +14,7 @@ type User = {
 };
 
 const { t } = i18nGlobal;
+const i18n = (relativePath: string) => t(`stores.user.${relativePath}`);
 
 export const useUserStore = defineStore('user', () => {
   const id: Ref<UserId> = ref(-1);
@@ -31,7 +32,7 @@ export const useUserStore = defineStore('user', () => {
     }
     newUser = newUser ?? {
       id: 0,
-      username: t('stores.users.labels.localUser'),
+      username: i18n('labels.localUser'),
       permission: 'Super',
     };
     id.value = newUser.id;

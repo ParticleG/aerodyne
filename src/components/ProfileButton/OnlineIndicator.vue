@@ -1,12 +1,10 @@
 <script setup lang="ts">
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
 
-import { WsWrapper } from 'types/WsWrapper';
-
-const ws: WsWrapper | undefined = inject('ws');
+import { ws } from 'boot/ws';
 
 const color = computed(() => {
-  return navigator.onLine ? (ws?.isOpen() ? 'green' : 'red') : 'grey';
+  return navigator.onLine ? (ws.isOpen() ? 'green' : 'red') : 'grey';
 });
 </script>
 

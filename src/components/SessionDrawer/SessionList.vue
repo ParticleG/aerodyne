@@ -12,16 +12,16 @@
       v-for="(currentRecentSender, index) in currentRecentSenders"
       :key="index"
       v-ripple
-      :active="selected === index"
+      :active="selected === currentRecentSender"
       :class="trueThen(mini, 'q-pa-sm')"
       active-class="active-session-item text-white"
       class="rounded-borders"
       clickable
-      @click="selected = index"
+      @click="selected = currentRecentSender"
     >
       <q-item-section avatar>
         <q-avatar :size="trueThen(mini, '54px')">
-          <q-img :src="currentRecentSender.avatar" />
+          <q-img :src="currentRecentSender.avatarUrl" />
           <q-badge
             v-show="mini && currentRecentSender.unread > 0"
             :label="currentRecentSender.unread"
@@ -39,8 +39,16 @@
         </q-item-label>
       </q-item-section>
       <q-item-section v-if="!mini" class="q-gutter-y-sm" side>
-        <q-item-label caption
-          >{{ currentRecentSender.message.time }}
+        <q-item-label caption>
+          {{
+            now - currentRecentSender.message.time < 10000
+              ? i18n('labels.justNow')
+              : humanizeDuration(now - currentRecentSender.message.time, {
+                  language: LANG_MAP[locale] ?? locale,
+                  largest: 1,
+                  units: ['d', 'h', 'm', 's', 'ms'],
+                })
+          }}
         </q-item-label>
         <q-badge
           v-show="currentRecentSender.unread > 0"
@@ -54,33 +62,47 @@
 </template>
 
 <script lang="ts" setup>
-import { storeToRefs } from 'pinia';
-import { computed, ComputedRef } from 'vue';
-import { MessageContainer, useMessagesStore } from 'stores/messages';
-import { OicqAccount } from 'types/common';
-import { trueThen } from 'utils/tools';
+import humanizeDuration from 'humanize-duration';
+import { computed, onBeforeUnmount, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
-const { recentSenders } = storeToRefs(useMessagesStore());
+import { MessageContainer, useClientStore } from 'stores/client';
+import { trueThen } from 'utils/common';
+import { LANG_MAP } from 'utils/constants';
+import { storeToRefs } from 'pinia';
+
+const { locale, t } = useI18n();
+const { currentRecentSenders } = storeToRefs(useClientStore());
 
 const emit = defineEmits(['update:modelValue']);
 
 export interface Props {
-  modelValue: number;
-  account: OicqAccount;
+  modelValue?: MessageContainer;
   mini?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   mini: false,
 });
+
 const selected = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value),
 });
 
-const currentRecentSenders: ComputedRef<MessageContainer[]> = computed(
-  () => recentSenders.value[props.account]
-);
+const now = ref(Date.now());
+
+const updateInterval = setInterval(() => {
+  now.value = Date.now();
+}, 1000);
+
+onBeforeUnmount(() => {
+  clearInterval(updateInterval);
+});
+
+const i18n = (relativePath: string) => {
+  return t('components.SessionDrawer.SessionList.' + relativePath);
+};
 </script>
 
 <style lang="scss" scoped>

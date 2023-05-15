@@ -1,36 +1,37 @@
 <script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
-import { computed, inject, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { ws } from 'boot/ws';
 import SmsInput from 'components/ClientDialog/SmsInput.vue';
 import { useSettingsStore } from 'stores/settings';
-import { ActionLogin, WsAction } from 'types/actions';
 import { ClientState } from 'types/ClientState';
-import { LoginData } from 'types/LoginData';
-import { WsWrapper } from 'types/WsWrapper';
+import { ActionLogin, WsAction } from 'types/actions';
+import { useClientStore } from 'stores/client';
+import { ResponseLogin } from 'types/responses';
 
 const { t } = useI18n();
 const { notify } = useQuasar();
 const { httpUrl } = storeToRefs(useSettingsStore());
-const ws: WsWrapper | undefined = inject('ws');
 
 const emit = defineEmits(['click:cancel', 'click:confirm']);
 
+const { currentAccount, externalHandlers } = storeToRefs(useClientStore());
+
 export interface Props {
-  modelValue?: LoginData;
-  account: string;
+  modelValue?: ResponseLogin;
 }
 
 const props = defineProps<Props>();
 
 const url = computed(() => {
-  switch (props.modelValue?.state) {
+  switch (props.modelValue?.data.state) {
     case ClientState.WaitingSlider:
       return `${httpUrl.value}/oicq/slider${
-        new URL(props.modelValue.url).search
-      }&account=${props.account}`;
+        new URL(props.modelValue?.data.url ?? '').search
+      }&account=${currentAccount.value}`;
   }
   return undefined;
 });
@@ -44,35 +45,34 @@ const i18n = (relativePath: string) => {
 
 const loginClient = () => {
   loading.value = true;
-  ws?.send(new ActionLogin(Number(props.account), code.value));
+  ws.send(new ActionLogin(currentAccount.value, code.value));
 };
 
-ws?.setHandler(WsAction.Login, (data) => {
-  switch (data.result) {
+externalHandlers.value.set(WsAction.Login, (wsResponse) => {
+  switch (wsResponse.result) {
     case 'success':
       notify({
         type: 'positive',
         message: i18n('notifications.success'),
       });
-      console.log(data);
-      emit('click:confirm', <LoginData>data.data);
+      emit('click:confirm', wsResponse);
       break;
     case 'failure':
       notify({
         type: 'warning',
         message: i18n('notifications.failure'),
-        caption: data.data.message,
+        caption: wsResponse.data.message,
       });
-      console.log(data);
+      console.log(wsResponse);
       emit('click:cancel');
       break;
     case 'error':
       notify({
         type: 'negative',
         message: i18n('notifications.error'),
-        caption: data.data.message,
+        caption: wsResponse.data.message,
       });
-      console.log(data);
+      console.log(wsResponse);
       break;
   }
 });
@@ -81,17 +81,17 @@ ws?.setHandler(WsAction.Login, (data) => {
 <template>
   <q-tab-panel class="column q-gutter-y-lg">
     <div>
-      {{ i18n('labels.account') + account }}
+      {{ i18n('labels.account') + currentAccount }}
     </div>
     <q-responsive
-      v-if="props.modelValue?.state === ClientState.WaitingSlider"
+      v-if="props.modelValue?.data.state === ClientState.WaitingSlider"
       :ratio="1"
       class="full-width"
     >
       <iframe :src="url" class="fit rounded-borders" style="border: 0" />
     </q-responsive>
     <sms-input
-      v-if="props.modelValue?.state === ClientState.WaitingSmsCode"
+      v-if="props.modelValue?.data.state === ClientState.WaitingSmsCode"
       v-model="code"
       :loading="loading"
     />
@@ -103,7 +103,7 @@ ws?.setHandler(WsAction.Login, (data) => {
         @click="emit('click:cancel')"
       />
       <q-btn
-        :label="i18n('labels.login')"
+        :label="i18n('labels.verify')"
         color="primary"
         @click="loginClient"
       />

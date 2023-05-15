@@ -1,5 +1,12 @@
 export default {
   components: {
+    ChatPage:{
+      ChatList: {
+        labels: {
+          justNow: 'Just now',
+        },
+      },
+    },
     ClientDialog: {
       labels: {
         titles: {
@@ -65,6 +72,7 @@ export default {
         labels: {
           account: 'Account: ',
           cancel: 'Back',
+          verify: 'Verify',
         },
         notifications: {
           success: 'Verify success',
@@ -115,6 +123,11 @@ export default {
       },
     },
     SessionDrawer: {
+      SessionList: {
+        labels: {
+          justNow: 'Just now',
+        },
+      },
       SessionSidebar: {
         labels: {
           toggleDarkMode: 'Toggle Dark Mode',

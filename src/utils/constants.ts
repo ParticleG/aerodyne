@@ -1,23 +1,37 @@
-const DRAWER_WIDTHS = {
+export const DRAWER_WIDTHS = {
   initial: 500,
   max: 700,
   min: 128,
   snap: 320,
 };
 
-const INTRANET_PATTERN = new RegExp(
+export const LANG_MAP = {
+  'ar-TN': 'ar',
+  'en-GB': 'en',
+  'en-US': 'en',
+  'fa-IR': 'fo',
+  'ko-KR': 'ko',
+  'kur-CKB': 'ku',
+  'nb-NO': 'no',
+  'pt-BR': 'pt',
+  'sr-CYR': 'sr',
+  'zh-CN': 'zh_CN',
+  'zh-TW': 'zh_TW',
+};
+
+export const INTRANET_PATTERN = new RegExp(
   '^((localhost)|(127\\.0\\.0\\.1)|' + // localhost
     '(\\d|10)(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}|' + // Class A address
     '(172\\.)(1[6-9]|2\\d|3[01])(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){2}|' + // Class B address
     '(192\\.168)(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){2})$' // Class C address
 );
 
-const EXTRANET_PATTERN = new RegExp(
+export const EXTRANET_PATTERN = new RegExp(
   '^((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))$' // OR IPv4 address
 );
 
-const PSEUDO_MESSAGES = [
+export const PSEUDO_MESSAGES = [
   "I don't know how to spell a lot of things.",
   "He only had one drink but he's completely wasted.",
   'We stayed an extra night because we were having so much fun.',
@@ -60,12 +74,4 @@ const PSEUDO_MESSAGES = [
   'She hated first dates.',
 ];
 
-const PSEUDO_NAMES = ['Me', 'Monica', 'Jane', 'Davy', 'Audrey', 'Judy'];
-
-export {
-  DRAWER_WIDTHS,
-  INTRANET_PATTERN,
-  EXTRANET_PATTERN,
-  PSEUDO_MESSAGES,
-  PSEUDO_NAMES,
-};
+export const PSEUDO_NAMES = ['Me', 'Monica', 'Jane', 'Davy', 'Audrey', 'Judy'];

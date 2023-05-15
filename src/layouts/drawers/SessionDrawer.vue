@@ -9,17 +9,16 @@
     :width="mobile ? $q.screen.width : width"
   >
     <div class="row no-wrap">
-      <SessionSidebar v-model="account" />
+      <SessionSidebar />
       <q-separator vertical />
       <div style="flex: 1 1 auto; min-width: 0">
         <SessionHeader
           :mini="isMini"
           v-model="searchText"
-          @keydown.enter="selectSession(0)"
+          @keydown.enter="selectSession(currentRecentSenders[0])"
         />
         <SessionList
-          :account="account"
-          :model-value="selectedSession"
+          :model-value="currentSession"
           :mini="isMini"
           @mouseenter="showFab = true"
           @mouseleave="showFab = false"
@@ -61,29 +60,32 @@ import SessionHeader from 'components/SessionDrawer/SessionHeader.vue';
 import SessionList from 'components/SessionDrawer/SessionList.vue';
 import SessionSidebar from 'components/SessionDrawer/SessionSidebar.vue';
 import { DRAWER_WIDTHS } from 'utils/constants';
+import { storeToRefs } from 'pinia';
+import { MessageContainer, useClientStore } from 'stores/client';
 
 const { screen } = useQuasar();
+const { currentSession, currentRecentSenders } = storeToRefs(useClientStore());
 
 const emit = defineEmits(['toggle:drawer']);
+
 export interface Props {
   mobile?: boolean;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   mobile: false,
 });
 
-const account = ref(-1);
 const width = ref(500);
 const searchText = ref('');
-const selectedSession = ref(-1);
 const showFab = ref(false);
 
 const isMini = computed(
   () => !props.mobile && width.value < DRAWER_WIDTHS.snap
 );
 
-const selectSession = (index: number) => {
-  selectedSession.value = index;
+const selectSession = (session: MessageContainer) => {
+  currentSession.value = session;
   if (screen.lt.md) {
     emit('toggle:drawer', false);
   }

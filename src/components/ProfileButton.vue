@@ -4,7 +4,7 @@ import { ref } from 'vue';
 
 import ProfileMenu from 'components/ProfileButton/ProfileMenu.vue';
 import { useUserStore } from 'stores/user';
-import { falseThen } from 'utils/tools';
+import { falseThen } from 'utils/common';
 
 const { loggedIn, avatar } = storeToRefs(useUserStore());
 

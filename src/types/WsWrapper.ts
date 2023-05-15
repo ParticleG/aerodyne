@@ -11,7 +11,15 @@ export type WsHandler<T extends WsResponse> = (
 ) => void;
 
 export class WsWrapper {
-  handlers: Map<WsAction, WsHandler<never>> = new Map();
+  private onOpenHandlers: (() => void)[] = [
+    () =>
+      Notify.create({
+        type: 'positive',
+        message: 'WebSocket connected',
+        icon: 'check',
+      }),
+  ];
+  private handlers: Map<WsAction, WsHandler<never>> = new Map();
   private url = '';
   private ws: WebSocket | undefined;
 
@@ -43,12 +51,12 @@ export class WsWrapper {
       }
     };
     this.ws.onopen = () => {
-      Notify.create({
-        type: 'positive',
-        message: 'WebSocket connected',
-        icon: 'check',
-      });
+      this.onOpenHandlers.forEach((handler) => handler());
     };
+  }
+
+  addOnOpenHandler(handler: () => void) {
+    this.onOpenHandlers.push(handler);
   }
 
   isOpen() {
@@ -59,6 +67,7 @@ export class WsWrapper {
     this.handlers.set(action, handler);
   }
 
+  // noinspection JSUnusedGlobalSymbols
   deleteHandler(action: WsAction) {
     this.handlers.delete(action);
   }

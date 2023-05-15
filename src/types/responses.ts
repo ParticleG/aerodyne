@@ -1,7 +1,6 @@
 import { WsAction } from 'types/actions';
-import { OicqAccount } from 'types/common';
+import { OicqAccount, OicqMessage } from 'types/common';
 import { ClientState } from 'types/ClientState';
-import { OicqMessage } from 'stores/messages';
 import { ClientInfo } from 'types/ClientInfo';
 
 type WsResult = 'success' | 'failure' | 'error';
@@ -95,6 +94,9 @@ export interface ResponseLogin extends WsSuccessResponse {
     | {
         state: ClientState.WaitingSlider;
         url: string;
+      }
+    | {
+        state: ClientState.Online;
       };
 }
 

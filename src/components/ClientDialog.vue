@@ -22,7 +22,7 @@
             @click:confirm="handleLoginConfirm"
           />
           <verify-panel
-            v-model="loginData"
+            v-model="responseLogin"
             :account="account"
             :name="4"
             @click:cancel="tabIndex -= 1"
@@ -35,22 +35,22 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from 'pinia';
 import { QDialog, useDialogPluginComponent } from 'quasar';
-import { inject, Ref, ref } from 'vue';
+import { Ref, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import InfoPanel from 'components/ClientDialog/InfoPanel.vue';
 import SubscribePanel from 'components/ClientDialog/SubscribePanel.vue';
 import LoginPanel from 'components/ClientDialog/LoginPanel.vue';
-import { LoginData } from 'types/LoginData';
 import { ClientState } from 'types/ClientState';
 import VerifyPanel from 'components/ClientDialog/VerifyPanel.vue';
-import { WsWrapper } from 'types/WsWrapper';
-import { ActionClientInfo } from 'types/actions';
+import { ResponseLogin } from 'types/responses';
+import { useClientStore } from 'stores/client';
 
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
+const { currentAccount } = storeToRefs(useClientStore());
 const { t } = useI18n();
-const ws: WsWrapper | undefined = inject('ws');
 
 defineEmits([...useDialogPluginComponent.emits]);
 
@@ -64,22 +64,20 @@ const tabIndex = ref(
 );
 
 const account = ref('');
-const loginData: Ref<undefined | LoginData> = ref();
+const responseLogin: Ref<undefined | ResponseLogin> = ref();
 
 const i18n = (relativePath) => {
   return t('components.ClientDialog.' + relativePath);
 };
 
-const handleLoginConfirm = (data: LoginData) => {
-  console.log(data);
-  if (data.state === ClientState.Online) {
-    ws?.send(new ActionClientInfo(Number(account.value)));
+const handleLoginConfirm = (wsResponse: ResponseLogin) => {
+  if (wsResponse.data.state === ClientState.Online) {
+    currentAccount.value = Number(account.value);
     onDialogHide();
-    return;
   } else {
-    loginData.value = data;
+    responseLogin.value = wsResponse;
+    tabIndex.value = 4;
   }
-  tabIndex.value = 4;
 };
 </script>
 

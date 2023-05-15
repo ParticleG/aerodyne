@@ -1,32 +1,24 @@
 <script lang="ts" setup>
 import { useQuasar } from 'quasar';
-import { computed, inject, ref } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import PasswordInput from 'components/ClientDialog/PasswordInput.vue';
 import { ActionLogin, WsAction } from 'types/actions';
 import { ResponseLogin } from 'types/responses';
-import { WsHandler, WsWrapper } from 'types/WsWrapper';
+import { WsHandler } from 'types/WsWrapper';
+import { ws } from 'boot/ws';
+import { storeToRefs } from 'pinia';
+import { useClientStore } from 'stores/client';
 
 const { t } = useI18n();
 const { notify } = useQuasar();
-const ws: WsWrapper | undefined = inject('ws');
+const { currentAccount, externalHandlers } = storeToRefs(useClientStore());
 
 const emit = defineEmits([
   'click:cancel',
   'click:confirm',
-  'update:modelValue',
 ]);
-
-export interface Props {
-  modelValue: string;
-}
-
-const props = defineProps<Props>();
-const account = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
 
 const loading = ref(false);
 const password = ref('');
@@ -37,34 +29,32 @@ const i18n = (relativePath: string) => {
 
 const loginClient = () => {
   loading.value = true;
-  ws?.send(new ActionLogin(Number(account.value), password.value));
+  ws.send(new ActionLogin(currentAccount.value, password.value));
 };
 
-ws?.setHandler(WsAction.Login, <WsHandler<ResponseLogin>>((data) => {
+externalHandlers.value.set(WsAction.Login, <WsHandler<ResponseLogin>>((wsResponse) => {
   loading.value = false;
-  switch (data.result) {
+  switch (wsResponse.result) {
     case 'success':
       notify({
         type: 'positive',
         message: i18n('notifications.success'),
       });
-      emit('click:confirm', data.data);
+      emit('click:confirm', wsResponse);
       break;
     case 'failure':
       notify({
         type: 'warning',
         message: i18n('notifications.failure'),
-        caption: data.data.message,
+        caption: wsResponse.data.message,
       });
-      console.log(data);
       break;
     case 'error':
       notify({
         type: 'negative',
         message: i18n('notifications.error'),
-        caption: data.data.message,
+        caption: wsResponse.data.message,
       });
-      console.log(data);
       break;
   }
 }));
@@ -73,7 +63,7 @@ ws?.setHandler(WsAction.Login, <WsHandler<ResponseLogin>>((data) => {
 <template>
   <q-tab-panel class="column q-gutter-y-lg">
     <div>
-      {{ i18n('labels.account') + account }}
+      {{ i18n('labels.account') + currentAccount }}
     </div>
     <password-input v-model="password" :loading="loading" />
     <div class="row q-gutter-x-md justify-end">

@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n';
 
 import OnlineIndicator from 'components/ProfileButton/OnlineIndicator.vue';
 import { useUserStore } from 'stores/user';
-import { falseThen } from 'utils/tools';
+import { falseThen } from 'utils/common';
 
 const { t } = useI18n();
 const { avatar, username, loggedIn } = storeToRefs(useUserStore());

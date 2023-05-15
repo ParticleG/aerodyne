@@ -1,6 +1,6 @@
 <template>
   <q-tab-panel class="column q-gutter-y-lg">
-    <account-input v-model="account" :loading="loading" />
+    <account-input v-model="currentAccount" :loading="loading" />
     <div class="row q-gutter-x-md justify-end">
       <q-btn
         :color="$q.dark.isActive ? 'white' : 'black'"
@@ -18,34 +18,24 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
-import { computed, inject, ref } from 'vue';
+import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { ws } from 'boot/ws';
 import AccountInput from 'components/ClientDialog/AccountInput.vue';
-import { ActionClientInfo, ActionSubscribe,WsAction } from 'types/actions';
-import { WsWrapper } from 'types/WsWrapper';
+import { useClientStore } from 'stores/client';
+import { ActionSubscribe, WsAction } from 'types/actions';
 import { ClientState } from 'types/ClientState';
+import { WsHandler } from 'types/WsWrapper';
+import { ResponseSubscribe } from 'types/responses';
 
 const { t } = useI18n();
 const { notify } = useQuasar();
-const ws: WsWrapper | undefined = inject('ws');
+const { currentAccount, externalHandlers } = storeToRefs(useClientStore());
 
-const emit = defineEmits([
-  'click:cancel',
-  'click:confirm',
-  'update:modelValue',
-]);
-
-export interface Props {
-  modelValue: string;
-}
-
-const props = defineProps<Props>();
-const account = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
+const emit = defineEmits(['click:cancel', 'click:confirm']);
 
 const loading = ref(false);
 
@@ -55,19 +45,18 @@ const i18n = (relativePath: string) => {
 
 const subscribeClient = () => {
   loading.value = true;
-  ws?.send(new ActionSubscribe(Number(account.value)));
+  ws.send(new ActionSubscribe(currentAccount.value));
 };
 
-ws?.setHandler(WsAction.Subscribe, (data) => {
+externalHandlers.value.set(WsAction.Subscribe, <WsHandler<ResponseSubscribe>>((wsResponse) => {
   loading.value = false;
-  switch (data.result) {
+  switch (wsResponse.result) {
     case 'success':
       notify({
         type: 'positive',
         message: i18n('notifications.success'),
       });
-      if ((data.data as ClientState) === ClientState.Online) {
-        ws?.send(new ActionClientInfo(Number(account.value)));
+      if (wsResponse.data === ClientState.Online) {
         emit('click:cancel');
       } else {
         emit('click:confirm');
@@ -77,20 +66,20 @@ ws?.setHandler(WsAction.Subscribe, (data) => {
       notify({
         type: 'warning',
         message: i18n('notifications.failure'),
-        caption: data.data.message,
+        caption: wsResponse.data.message,
       });
-      console.log(data);
+      console.log(wsResponse);
       break;
     case 'error':
       notify({
         type: 'negative',
         message: i18n('notifications.error'),
-        caption: data.data.message,
+        caption: wsResponse.data.message,
       });
-      console.log(data);
+      console.log(wsResponse);
       break;
   }
-});
+}));
 </script>
 
 <style scoped></style>

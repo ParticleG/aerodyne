@@ -2,15 +2,15 @@
   <div class="column col-auto items-center">
     <q-btn flat icon="menu" padding="md" />
     <q-btn
-      v-for="(client, key) in clients"
+      v-for="(client, key) in clientMap"
       :key="key"
       color="primary"
-      :flat="account !== client.account"
-      round
-      :unelevated="account === client.account"
-      @click="account = client.account"
+      :flat="currentAccount !== client.account"
+      padding="sm"
+      :unelevated="currentAccount === client.account"
+      @click="currentAccount = client.account"
     >
-      <q-avatar>
+      <q-avatar size="42px">
         <q-img :src="client.avatarUrl" />
       </q-avatar>
     </q-btn>
@@ -49,30 +49,18 @@ import ClientDialog from 'components/ClientDialog.vue';
 import { useSettingsStore } from 'stores/settings';
 import ProfileButton from 'components/ProfileButton.vue';
 import { useClientStore } from 'stores/client';
-import { computed } from 'vue';
 
 const { t } = useI18n();
-const { clients } = storeToRefs(useClientStore());
+const { currentAccount, clientMap } = storeToRefs(useClientStore());
 const { toggleDarkMode } = useSettingsStore();
 const { darkModeColorAndIcon } = storeToRefs(useSettingsStore());
 const { dialog } = useQuasar();
-
-const emit = defineEmits(['update:modelValue']);
-
-export interface Props {
-  modelValue: number;
-}
-
-const props = defineProps<Props>();
-const account = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-});
 
 const i18n = (relativePath) => {
   return t('components.SessionDrawer.SessionSidebar.' + relativePath);
 };
 const subscribeAccount = () => {
+  currentAccount.value = 0;
   dialog({
     component: ClientDialog,
     componentProps: {

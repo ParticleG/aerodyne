@@ -7,17 +7,18 @@ const { t } = useI18n();
 const emit = defineEmits(['update:modelValue']);
 
 export interface Props {
-  modelValue?: string;
+  modelValue?: number;
   loading: boolean;
 }
+
 const props = withDefaults(defineProps<Props>(), {
-  modelValue: '',
+  modelValue: 0,
   loading: false,
 });
 
 const account = computed({
   get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
+  set: (value) => emit('update:modelValue', Number(value)),
 });
 
 const accountInput = reactive({
@@ -26,7 +27,7 @@ const accountInput = reactive({
     if (!accountInput.content) {
       return false;
     }
-    return accountInput.content.length < 5;
+    return accountInput.content < 10 * 5;
   }),
   loading: false,
 });
@@ -38,7 +39,7 @@ const i18n = (relativePath: string) => {
 
 <template>
   <q-input
-    v-model="accountInput.content"
+    v-model.number="accountInput.content"
     :dense="!$q.screen.gt.sm"
     :error="accountInput.error"
     :label="i18n('labels.account')"

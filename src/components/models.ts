@@ -1,4 +1,4 @@
-interface ChatMessage {
+export interface ChatMessage {
   avatar: string;
   bgColor?: string;
   name: string;
@@ -8,14 +8,7 @@ interface ChatMessage {
   textColor?: string;
 }
 
-interface SessionItem {
-  avatar: string;
-  message: ChatMessage;
-  name: string;
-  unread: number;
-}
-
-interface TouchPanEvent {
+export interface TouchPanEvent {
   isFirst: boolean;
   isFinal: boolean;
   duration: number;
@@ -32,5 +25,3 @@ interface TouchPanEvent {
     y: number;
   };
 }
-
-export type { ChatMessage, SessionItem, TouchPanEvent };

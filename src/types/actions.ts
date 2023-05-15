@@ -1,5 +1,6 @@
+import { OicqAccount } from 'types/common';
+
 export enum WsAction {
-  Invalid = 'Invalid',
   Monitor = 'Monitor',
   List = 'List',
   Subscribe = 'Subscribe',
@@ -11,6 +12,7 @@ export enum WsAction {
 
 export interface ActionBase {
   action: WsAction;
+  account?: OicqAccount;
   data?: unknown;
 }
 
@@ -24,57 +26,51 @@ export class ActionList implements ActionBase {
 
 export class ActionSubscribe implements ActionBase {
   action = WsAction.Subscribe;
-  data: {
-    account: number;
-  };
+  account: OicqAccount;
 
   constructor(account: number) {
-    this.data = { account };
+    this.account = account;
   }
 }
 
 export class ActionLogin implements ActionBase {
   action = WsAction.Login;
-  data: {
-    account: number;
-    payload?: string;
-  };
+  account: OicqAccount;
+  data?: string;
 
   constructor(account: number, payload?: string) {
-    this.data = { account, payload };
+    this.account = account;
+    this.data = payload;
   }
 }
 
 export class ActionLogout implements ActionBase {
   action = WsAction.Logout;
-  data: {
-    account: number;
-  };
+  account: OicqAccount;
 
   constructor(account: number) {
-    this.data = { account };
+    this.account = account;
   }
 }
 
 export class ActionMessage implements ActionBase {
   action = WsAction.Message;
+  account: OicqAccount;
   data: {
-    sender: number;
     message: string;
   };
 
-  constructor(sender: number, message: string) {
-    this.data = { sender, message };
+  constructor(account: number, message: string) {
+    this.account = account;
+    this.data = { message };
   }
 }
 
 export class ActionClientInfo implements ActionBase {
   action = WsAction.ClientInfo;
-  data: {
-    account: number;
-  };
+  account: OicqAccount;
 
   constructor(account: number) {
-    this.data = { account };
+    this.account = account;
   }
 }

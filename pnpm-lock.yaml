@@ -7,6 +7,9 @@ dependencies:
   axios:
     specifier: ^1.4.0
     version: 1.4.0
+  humanize-duration:
+    specifier: ^3.28.0
+    version: 3.28.0
   pinia:
     specifier: ^2.0.36
     version: 2.0.36(typescript@5.0.4)(vue@3.2.47)
@@ -33,6 +36,9 @@ devDependencies:
   '@quasar/app-vite':
     specifier: ^1.4.0
     version: 1.4.0(eslint@8.40.0)(pinia@2.0.36)(quasar@2.12.0)(rollup@2.77.3)(vue-router@4.1.6)(vue@3.2.47)(workbox-build@6.5.4)
+  '@types/humanize-duration':
+    specifier: ^3.27.1
+    version: 3.27.1
   '@types/node':
     specifier: ^20.1.1
     version: 20.1.1
@@ -1710,6 +1716,10 @@ packages:
 
   /@types/har-format@1.2.10:
     resolution: {integrity: sha512-o0J30wqycjF5miWDKYKKzzOU1ZTLuA42HZ4HE7/zqTOc/jTLdQ5NhYWvsRQo45Nfi1KHoRdNhteSI4BAxTF1Pg==}
+    dev: true
+
+  /@types/humanize-duration@3.27.1:
+    resolution: {integrity: sha512-K3e+NZlpCKd6Bd/EIdqjFJRFHbrq5TzPPLwREk5Iv/YoIjQrs6ljdAUCo+Lb2xFlGNOjGSE0dqsVD19cZL137w==}
     dev: true
 
   /@types/json-schema@7.0.11:
@@ -3778,6 +3788,10 @@ packages:
       statuses: 2.0.1
       toidentifier: 1.0.1
     dev: true
+
+  /humanize-duration@3.28.0:
+    resolution: {integrity: sha512-jMAxraOOmHuPbffLVDKkEKi/NeG8dMqP8lGRd6Tbf7JgAeG33jjgPWDbXXU7ypCI0o+oNKJFgbSB9FKVdWNI2A==}
+    dev: false
 
   /iconv-lite@0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
