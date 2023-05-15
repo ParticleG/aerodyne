@@ -4,6 +4,8 @@ import { GroupRole } from 'icqq/lib/common';
 
 interface OicqSharedMessage {
   type: 'discuss' | 'group' | 'private';
+  id: number;
+  name: string;
   timestamp: number;
   avatarUrl: string;
   components: MessageElem[];
@@ -57,8 +59,6 @@ export interface OicqPrivateMessage extends OicqSharedMessage {
 }
 
 export interface OicqMessage extends OicqSharedMessage {
-  id: number;
-  name: string;
   sender: {
     userId: number;
     nickname: string;
