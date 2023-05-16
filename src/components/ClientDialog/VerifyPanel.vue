@@ -14,11 +14,11 @@ import { ResponseLogin } from 'types/responses';
 
 const { t } = useI18n();
 const { notify } = useQuasar();
+const { registerHandler } = useClientStore();
+const { currentAccount } = storeToRefs(useClientStore());
 const { httpUrl } = storeToRefs(useSettingsStore());
 
 const emit = defineEmits(['click:cancel', 'click:confirm']);
-
-const { currentAccount, externalHandlers } = storeToRefs(useClientStore());
 
 export interface Props {
   modelValue?: ResponseLogin;
@@ -48,7 +48,7 @@ const loginClient = () => {
   ws.send(new ActionLogin(currentAccount.value, code.value));
 };
 
-externalHandlers.value.set(WsAction.Login, (wsResponse) => {
+registerHandler(WsAction.Login, (wsResponse) => {
   switch (wsResponse.result) {
     case 'success':
       notify({

@@ -12,12 +12,12 @@
       v-for="(currentRecentSender, index) in currentRecentSenders"
       :key="index"
       v-ripple
-      :active="selected === currentRecentSender"
+      :active="selected === getUuid(currentRecentSender)"
       :class="trueThen(mini, 'q-pa-sm')"
       active-class="active-session-item text-white"
       class="rounded-borders"
       clickable
-      @click="selected = currentRecentSender"
+      @click="selected = getUuid(currentRecentSender)"
     >
       <q-item-section avatar>
         <q-avatar :size="trueThen(mini, '54px')">
@@ -63,13 +63,13 @@
 
 <script lang="ts" setup>
 import humanizeDuration from 'humanize-duration';
+import { storeToRefs } from 'pinia';
 import { computed, onBeforeUnmount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { MessageContainer, useClientStore } from 'stores/client';
-import { trueThen } from 'utils/common';
+import { useClientStore } from 'stores/client';
+import { getUuid, trueThen } from 'utils/common';
 import { LANG_MAP } from 'utils/constants';
-import { storeToRefs } from 'pinia';
 
 const { locale, t } = useI18n();
 const { currentRecentSenders } = storeToRefs(useClientStore());
@@ -77,7 +77,7 @@ const { currentRecentSenders } = storeToRefs(useClientStore());
 const emit = defineEmits(['update:modelValue']);
 
 export interface Props {
-  modelValue?: MessageContainer;
+  modelValue: string;
   mini?: boolean;
 }
 

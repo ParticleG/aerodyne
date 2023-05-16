@@ -5,15 +5,14 @@ import { useI18n } from 'vue-i18n';
 
 import PasswordInput from 'components/ClientDialog/PasswordInput.vue';
 import { ActionLogin, WsAction } from 'types/actions';
-import { ResponseLogin } from 'types/responses';
-import { WsHandler } from 'types/WsWrapper';
 import { ws } from 'boot/ws';
 import { storeToRefs } from 'pinia';
 import { useClientStore } from 'stores/client';
 
 const { t } = useI18n();
 const { notify } = useQuasar();
-const { currentAccount, externalHandlers } = storeToRefs(useClientStore());
+const { registerHandler } = useClientStore();
+const { currentAccount } = storeToRefs(useClientStore());
 
 const emit = defineEmits(['click:cancel', 'click:confirm']);
 
@@ -29,9 +28,7 @@ const loginClient = () => {
   ws.send(new ActionLogin(currentAccount.value, password.value));
 };
 
-externalHandlers.value.set(WsAction.Login, <WsHandler<ResponseLogin>>((
-  wsResponse
-) => {
+registerHandler(WsAction.Login, (wsResponse) => {
   loading.value = false;
   switch (wsResponse.result) {
     case 'success':
@@ -56,7 +53,7 @@ externalHandlers.value.set(WsAction.Login, <WsHandler<ResponseLogin>>((
       });
       break;
   }
-}));
+});
 </script>
 
 <template>

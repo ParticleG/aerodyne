@@ -4,69 +4,44 @@
       <q-chat-message
         v-for="(message, index) in modelValue"
         :key="index"
-        :avatar="
-          message.message_type === 'private'
-            ? currentClient.friends[message.sender.user_id]?.avatarUrl
-            : message.message_type === 'discuss'
-            ? currentClient.groups[message.discuss_id]?.memberMap?.[
-                message.sender.user_id
-              ]?.avatarUrl
-            : currentClient.groups[message.group_id]?.memberMap?.[
-                message.sender.user_id
-              ]?.avatarUrl
-        "
-        :bg-color="
-          message.sender.user_id === currentClient.account
-            ? 'primary'
-            : dark.isActive
-            ? 'dark'
-            : 'grey-3'
-        "
+        :avatar="message.sender.avatarUrl"
+        :bg-color="getBgColor(message.sent)"
         :name="message.sender.nickname"
-        :sent="
-          $q.screen.lt.md
-            ? false
-            : message.sender.user_id === currentClient.account
-        "
-        :stamp="
-          now - message.time < 10000
-            ? i18n('labels.justNow')
-            : humanizeDuration(now - message.time, {
-                language: LANG_MAP[locale] ?? locale,
-                largest: 1,
-                units: ['d', 'h', 'm', 's', 'ms'],
-              })
-        "
-        :text="[message.raw_message]"
-        :text-color="
-          message.sender.user_id === currentClient.account
-            ? 'white'
-            : dark.isActive
-            ? 'white'
-            : 'black'
-        "
-      />
+        :sent="getIsSent(message.sent)"
+        :stamp="getTimestamp(message.timestamp)"
+        :text-color="getTextColor(message.sent)"
+      >
+        <div class="row q-gutter-x-sm">
+          <template
+            v-for="(component, index) in message.components"
+            :key="index"
+          >
+            <message-component :model-value="component" />
+          </template>
+          <q-tooltip>
+            {{ JSON.stringify(message.components) }}
+          </q-tooltip>
+        </div>
+      </q-chat-message>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
-
-import { OicqMessage } from 'types/common';
-import { storeToRefs } from 'pinia';
-import { useClientStore } from 'stores/client';
 import humanizeDuration from 'humanize-duration';
-import { LANG_MAP } from 'utils/constants';
+import { useQuasar } from 'quasar';
 import { onBeforeUnmount, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
+import { OicqMessageDisplay } from 'types/OicqMessage';
+import { LANG_MAP } from 'utils/constants';
+import MessageComponent from 'components/ChatPage/MessageComponent.vue';
+
 const { locale, t } = useI18n();
-const { currentClient } = storeToRefs(useClientStore());
-const { dark } = useQuasar();
+const { dark, screen } = useQuasar();
 
 export interface Props {
-  modelValue: OicqMessage[];
+  modelValue: OicqMessageDisplay[];
 }
 
 defineProps<Props>();
@@ -83,6 +58,42 @@ onBeforeUnmount(() => {
 
 const i18n = (relativePath: string) => {
   return t('components.ChatPage.ChatList.' + relativePath);
+};
+
+const getBgColor = (isSent: boolean) => {
+  if (isSent) {
+    return 'primary';
+  } else if (dark.isActive) {
+    return 'dark';
+  } else {
+    return 'grey-3';
+  }
+};
+
+const getIsSent = (isSent: boolean) => {
+  return screen.lt.md ? false : isSent;
+};
+
+const getTimestamp = (timestamp: number) => {
+  if (now.value - timestamp < 10000) {
+    return i18n('labels.justNow');
+  } else {
+    return humanizeDuration(now.value - timestamp, {
+      language: LANG_MAP[locale.value] ?? locale.value,
+      largest: 1,
+      units: ['d', 'h', 'm', 's', 'ms'],
+    });
+  }
+};
+
+const getTextColor = (isSent: boolean) => {
+  if (isSent) {
+    return 'white';
+  } else if (dark.isActive) {
+    return 'white';
+  } else {
+    return 'black';
+  }
 };
 </script>
 

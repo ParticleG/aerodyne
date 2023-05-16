@@ -28,12 +28,11 @@ import AccountInput from 'components/ClientDialog/AccountInput.vue';
 import { useClientStore } from 'stores/client';
 import { ActionSubscribe, WsAction } from 'types/actions';
 import { ClientState } from 'types/ClientState';
-import { WsHandler } from 'types/WsWrapper';
-import { ResponseSubscribe } from 'types/responses';
 
 const { t } = useI18n();
 const { notify } = useQuasar();
-const { currentAccount, externalHandlers } = storeToRefs(useClientStore());
+const { registerHandler } = useClientStore();
+const { currentAccount } = storeToRefs(useClientStore());
 
 const emit = defineEmits(['click:cancel', 'click:confirm']);
 
@@ -48,9 +47,7 @@ const subscribeClient = () => {
   ws.send(new ActionSubscribe(currentAccount.value));
 };
 
-externalHandlers.value.set(WsAction.Subscribe, <WsHandler<ResponseSubscribe>>((
-  wsResponse
-) => {
+registerHandler(WsAction.Subscribe, (wsResponse) => {
   loading.value = false;
   switch (wsResponse.result) {
     case 'success':
@@ -81,7 +78,7 @@ externalHandlers.value.set(WsAction.Subscribe, <WsHandler<ResponseSubscribe>>((
       console.log(wsResponse);
       break;
   }
-}));
+});
 </script>
 
 <style scoped></style>

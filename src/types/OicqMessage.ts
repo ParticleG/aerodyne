@@ -1,6 +1,7 @@
 import { MessageElem } from 'icqq/lib/message/elements';
 import { Anonymous } from 'icqq/lib/message/message';
 import { GroupRole } from 'icqq/lib/common';
+import { OicqAccount } from 'types/common';
 
 interface OicqSharedMessage {
   type: 'discuss' | 'group' | 'private';
@@ -19,7 +20,7 @@ interface OicqSharedMessage {
   div: number;
 }
 
-export interface OicqDiscussMessage extends OicqSharedMessage {
+interface OicqDiscussMessage extends OicqSharedMessage {
   type: 'discuss';
   ping: false | 'me';
   sender: {
@@ -29,7 +30,7 @@ export interface OicqDiscussMessage extends OicqSharedMessage {
   };
 }
 
-export interface OicqGroupMessage extends OicqSharedMessage {
+interface OicqGroupMessage extends OicqSharedMessage {
   type: 'group';
   subType: 'normal' | 'anonymous';
   anonymous: Anonymous | null;
@@ -45,7 +46,7 @@ export interface OicqGroupMessage extends OicqSharedMessage {
   };
 }
 
-export interface OicqPrivateMessage extends OicqSharedMessage {
+interface OicqPrivateMessage extends OicqSharedMessage {
   type: 'private';
   subType: 'group' | 'friend' | 'other' | 'self';
   fromId: number;
@@ -58,7 +59,7 @@ export interface OicqPrivateMessage extends OicqSharedMessage {
   };
 }
 
-export interface OicqMessage extends OicqSharedMessage {
+interface OicqMessage extends OicqSharedMessage {
   sender: {
     userId: number;
     nickname: string;
@@ -76,6 +77,79 @@ export interface OicqMessage extends OicqSharedMessage {
   block?: boolean;
   fromId?: number;
   toId?: number;
+}
+
+export class OicqMessageDisplay implements OicqMessage {
+  // Shared
+  type: 'discuss' | 'group' | 'private';
+  id: number;
+  name: string;
+  timestamp: number;
+  avatarUrl: string;
+  components: MessageElem[];
+  messageRaw: string;
+  font: string;
+  messageId: string;
+  seq: number;
+  rand: number;
+  packetNo: number;
+  index: number;
+  div: number;
+  // Type specific
+  sender: {
+    userId: number;
+    nickname: string;
+    avatarUrl: string;
+    card?: string;
+    level?: number;
+    role?: GroupRole;
+    title?: string;
+    groupId?: number;
+    discussId?: number;
+  };
+  subType?: ('normal' | 'anonymous') | ('group' | 'friend' | 'other' | 'self');
+  ping?: false | 'me' | 'all';
+  anonymous?: Anonymous | null;
+  block?: boolean;
+  fromId?: number;
+  toId?: number;
+  // Display
+  messages: MessageElem[][];
+  sent: boolean;
+
+  constructor(oicqMessage: OicqMessage, currentAccount: OicqAccount) {
+    this.type = oicqMessage.type;
+    this.id = oicqMessage.id;
+    this.name = oicqMessage.name;
+    this.timestamp = oicqMessage.timestamp;
+    this.avatarUrl = oicqMessage.avatarUrl;
+    this.components = oicqMessage.components;
+    this.messageRaw = oicqMessage.messageRaw;
+    this.font = oicqMessage.font;
+    this.messageId = oicqMessage.messageId;
+    this.seq = oicqMessage.seq;
+    this.rand = oicqMessage.rand;
+    this.packetNo = oicqMessage.packetNo;
+    this.index = oicqMessage.index;
+    this.div = oicqMessage.div;
+
+    this.sender = oicqMessage.sender;
+    this.subType = oicqMessage.subType;
+    this.ping = oicqMessage.ping;
+    this.anonymous = oicqMessage.anonymous;
+    this.block = oicqMessage.block;
+    this.fromId = oicqMessage.fromId;
+    this.toId = oicqMessage.toId;
+
+    this.messages = [this.components];
+    this.sent = this.sender.userId === currentAccount;
+  }
+
+  addMessage(message: MessageElem[]) {
+    // TODO: Check if message is ChainElem
+    this.messages.push(message);
+    return true;
+  }
 }
 
 export interface OicqMessageContainer {

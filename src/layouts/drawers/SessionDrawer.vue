@@ -15,14 +15,14 @@
         <SessionHeader
           :mini="isMini"
           v-model="searchText"
-          @keydown.enter="selectSession(currentRecentSenders[0])"
+          @keydown.enter="selectSender(getUuid(currentRecentSenders[0]))"
         />
         <SessionList
           :model-value="currentSession"
           :mini="isMini"
           @mouseenter="showFab = true"
           @mouseleave="showFab = false"
-          @update:model-value="selectSession"
+          @update:model-value="selectSender"
         />
       </div>
     </div>
@@ -61,7 +61,8 @@ import SessionList from 'components/SessionDrawer/SessionList.vue';
 import SessionSidebar from 'components/SessionDrawer/SessionSidebar.vue';
 import { DRAWER_WIDTHS } from 'utils/constants';
 import { storeToRefs } from 'pinia';
-import { MessageContainer, useClientStore } from 'stores/client';
+import { useClientStore } from 'stores/client';
+import { getUuid } from 'utils/common';
 
 const { screen } = useQuasar();
 const { currentSession, currentRecentSenders } = storeToRefs(useClientStore());
@@ -84,8 +85,8 @@ const isMini = computed(
   () => !props.mobile && width.value < DRAWER_WIDTHS.snap
 );
 
-const selectSession = (session: MessageContainer) => {
-  currentSession.value = session;
+const selectSender = (sender: string) => {
+  currentSession.value = sender;
   if (screen.lt.md) {
     emit('toggle:drawer', false);
   }

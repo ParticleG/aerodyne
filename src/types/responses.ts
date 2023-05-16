@@ -1,7 +1,8 @@
 import { WsAction } from 'types/actions';
-import { OicqAccount, OicqMessage } from 'types/common';
+import { OicqAccount } from 'types/common';
 import { ClientState } from 'types/ClientState';
 import { ClientInfo } from 'types/ClientInfo';
+import { OicqMessage } from 'types/OicqMessage';
 
 type WsResult = 'success' | 'failure' | 'error';
 
