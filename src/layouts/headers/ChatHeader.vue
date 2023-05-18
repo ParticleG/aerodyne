@@ -9,13 +9,21 @@
         text-color="grey"
         @click="openDrawer"
       />
-      <q-btn :color="darkMode ? 'white' : 'black'" round>
+      <q-btn :color="dark.isActive ? 'white' : 'black'" round>
         <q-avatar size="42px">
-          <q-img src="https://cdn.quasar.dev/img/boy-avatar.png" />
+          <q-img :src="currentMessageContainer?.avatarUrl" />
         </q-avatar>
       </q-btn>
       <div class="q-ml-md">
-        <div class="text-bold text-auto">Group Name Demo</div>
+        <div
+          v-if="currentMessageContainer?.type === 'group'"
+          class="text-bold text-auto"
+        >
+          {{
+            (currentClient.groups[currentMessageContainer.id] as GroupData)
+              .member_count
+          }}
+        </div>
         <div class="text-caption text-grey">1919 Members</div>
       </div>
       <q-space />
@@ -27,8 +35,15 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
+import { useQuasar } from 'quasar';
 
-import { useSettingsStore } from 'stores/settings';
+import { useClientStore } from 'stores/client';
+import { GroupData } from 'types/ClientInfo';
+
+const { dark } = useQuasar();
+const { currentClient, currentMessageContainer } = storeToRefs(
+  useClientStore()
+);
 
 export interface Props {
   mobile?: boolean;
@@ -42,8 +57,6 @@ const emit = defineEmits(['toggle:drawer']);
 const openDrawer = () => {
   emit('toggle:drawer', true);
 };
-
-const { darkMode } = storeToRefs(useSettingsStore());
 </script>
 
 <style scoped lang="scss">

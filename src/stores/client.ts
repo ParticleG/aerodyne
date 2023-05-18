@@ -41,6 +41,14 @@ export const useClientStore = defineStore(
     const currentRecentSenders = computed(
       () => recentSenders[currentAccount.value] ?? []
     );
+    const currentMessageContainer = computed(() => {
+      const [type, id] = currentSession.value.split('_');
+      return currentRecentSenders.value.find(
+        (currentRecentSender) =>
+          currentRecentSender.type === type &&
+          currentRecentSender.id === Number(id)
+      );
+    });
 
     const registerHandler = (
       action: WsAction,
@@ -78,8 +86,9 @@ export const useClientStore = defineStore(
       clientMessages,
       recentSenders,
       currentClient,
-      currentRecentSenders,
       currentMessages,
+      currentRecentSenders,
+      currentMessageContainer,
       registerHandler,
     };
   },
