@@ -9,22 +9,29 @@
         text-color="grey"
         @click="openDrawer"
       />
-      <q-btn :color="dark.isActive ? 'white' : 'black'" round>
+      <q-btn
+        v-if="currentMessageContainer?.avatarUrl"
+        :color="dark.isActive ? 'white' : 'black'"
+        round
+      >
         <q-avatar size="42px">
           <q-img :src="currentMessageContainer?.avatarUrl" />
         </q-avatar>
       </q-btn>
       <div class="q-ml-md">
+        <div v-if="currentMessageContainer" class="text-bold text-auto">
+          {{ currentMessageContainer.name }}
+        </div>
         <div
           v-if="currentMessageContainer?.type === 'group'"
-          class="text-bold text-auto"
+          class="text-caption text-grey"
         >
           {{
             (currentClient.groups[currentMessageContainer.id] as GroupData)
               .member_count
           }}
+          Members
         </div>
-        <div class="text-caption text-grey">1919 Members</div>
       </div>
       <q-space />
       <q-btn flat icon="search" round text-color="grey" />
@@ -33,7 +40,7 @@
   </q-header>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { storeToRefs } from 'pinia';
 import { useQuasar } from 'quasar';
 
@@ -59,7 +66,7 @@ const openDrawer = () => {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 @import 'css/app';
 
 body.body--dark {
