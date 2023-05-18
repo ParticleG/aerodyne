@@ -97,10 +97,6 @@ const updateClientMessages = (
   const oicqMessage = wsResponse.data;
   const uuid = getUuid(oicqMessage);
 
-  if (uuid === 'group_628669530') {
-    console.log(oicqMessage.components);
-  }
-
   clientMessages[wsResponse.account] ??= {};
   clientMessages[wsResponse.account][uuid] ??= [];
   clientMessages[wsResponse.account][uuid].push(

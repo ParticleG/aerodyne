@@ -12,6 +12,11 @@
         :text-color="getTextColor(message.sent)"
       >
         <div class="row q-gutter-x-sm">
+          <q-card v-if="message.source" class="col-12">
+            <div>
+              {{ message.source.user_id }}
+            </div>
+          </q-card>
           <template
             v-for="(component, index) in message.components"
             :key="index"

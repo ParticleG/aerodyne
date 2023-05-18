@@ -1,4 +1,4 @@
-import { MessageElem } from 'icqq/lib/message/elements';
+import { MessageElem, Quotable } from 'icqq/lib/message/elements';
 import { Anonymous } from 'icqq/lib/message/message';
 import { GroupRole } from 'icqq/lib/common';
 import { OicqAccount } from 'types/common';
@@ -15,6 +15,7 @@ interface OicqSharedMessage {
   messageId: string;
   seq: number;
   rand: number;
+  source?: Quotable;
   packetNo: number;
   index: number;
   div: number;
@@ -92,6 +93,7 @@ export class OicqMessageDisplay implements OicqMessage {
   messageId: string;
   seq: number;
   rand: number;
+  source?: Quotable;
   packetNo: number;
   index: number;
   div: number;
@@ -129,6 +131,7 @@ export class OicqMessageDisplay implements OicqMessage {
     this.messageId = oicqMessage.messageId;
     this.seq = oicqMessage.seq;
     this.rand = oicqMessage.rand;
+    this.source = oicqMessage.source;
     this.packetNo = oicqMessage.packetNo;
     this.index = oicqMessage.index;
     this.div = oicqMessage.div;
