@@ -15,7 +15,7 @@
           <q-card
             v-if="message.source"
             bordered
-            class="col-11 q-mb-sm q-ml-sm q-pa-sm text-grey"
+            class="col-11 q-mb-sm q-pa-sm text-grey"
             flat
           >
             <div class="q-mb-sm">
