@@ -12,10 +12,17 @@
         :text-color="getTextColor(message.sent)"
       >
         <div class="row q-gutter-x-sm">
-          <q-card v-if="message.source" class="col-12">
-            <div>
+          <q-card
+            v-if="message.source"
+            bordered
+            class="col-11 q-mb-sm q-ml-sm q-pa-sm text-grey"
+            flat
+          >
+            <div class="q-mb-sm">
               {{ message.source.user_id }}
+              {{ new Date(message.source.time * 1000).toLocaleTimeString() }}
             </div>
+            <div>{{ message.source.message }}</div>
           </q-card>
           <template
             v-for="(component, index) in message.components"
@@ -32,7 +39,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import humanizeDuration from 'humanize-duration';
 import { useQuasar } from 'quasar';
 import { onBeforeUnmount, ref } from 'vue';
