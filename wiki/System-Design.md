@@ -1,4 +1,4 @@
-## User `class`
+## `class` User
 
 ### Overview
 
@@ -17,7 +17,7 @@ classDiagram
   }
 ```
 
-## ClientMap
+## `class` ClientMap
 
 ### Overview
 
